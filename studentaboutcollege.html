@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Engineering College Bikaner</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+       <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Colors */
+            --teal-primary: #00a99d;
+            --teal-light: #ccfbf1;
+            --teal-icon: #0f766e;
+            
+            --icon-bg-teal: #ccfbf1;
+            --icon-bg-purple: #f3e8ff;
+            --icon-bg-blue: #dbeafe;
+            --icon-bg-green: #dcfce7;
+            
+            --purple-text: #9333ea;
+            --blue-text: #2563eb;
+            --green-text: #16a34a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* --- Hero Section --- */
+        .hero-card {
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80'); /* Placeholder for college building */
+            background-size: cover;
+            background-position: center;
+            border-radius: 24px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2.5rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* --- Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .stat-icon-box {
+            width: 50px;
+            height: 50px;
+            background-color: var(--teal-light);
+            color: var(--teal-icon);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 500;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+
+        /* --- About Section --- */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .about-text {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        /* --- Info Grid (Contact & Departments) --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Contact Items */
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .icon-teal { background-color: var(--icon-bg-teal); color: var(--teal-icon); }
+        .icon-purple { background-color: var(--icon-bg-purple); color: var(--purple-text); }
+        .icon-blue { background-color: var(--icon-bg-blue); color: var(--blue-text); }
+        .icon-green { background-color: var(--icon-bg-green); color: var(--green-text); }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-label {
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-value {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+            line-height: 1.5;
+        }
+
+        /* Department Items */
+        .dept-item {
+            background-color: #f0fdfa; /* Very light teal bg */
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+        }
+
+        .dept-item:hover {
+            background-color: #ccfbf1;
+        }
+
+        .dept-icon {
+            color: var(--teal-primary);
+        }
+
+        /* --- Facilities Grid --- */
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .facility-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background: white;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .facility-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border-color: var(--teal-primary);
+        }
+
+        .facility-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--teal-primary);
+            border-radius: 50%;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .hero-card { height: 250px; padding: 1.5rem; }
+            .hero-title { font-size: 1.5rem; }
+            .hero-subtitle { font-size: 0.9rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .facilities-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .content-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">About Engineering College Bikaner</h1>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-card">
+        <div class="hero-title">Engineering College Bikaner</div>
+        <div class="hero-subtitle">Excellence in Technical Education Since 1995</div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon-box"><i class="fa-solid fa-ribbon"></i></div>
+            <div class="stat-number">1995</div>
+            <div class="stat-label">Established</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-box"><i class="fa-solid fa-user-group"></i></div>
+            <div class="stat-number">5000+</div>
+            <div class="stat-label">Students</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-box"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <div class="stat-number">300+</div>
+            <div class="stat-label">Faculty</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-box"><i class="fa-solid fa-book-open"></i></div>
+            <div class="stat-number">15</div>
+            <div class="stat-label">Departments</div>
+        </div>
+    </div>
+
+    <!-- About Content -->
+    <div class="content-card">
+        <div class="section-title">About Us</div>
+        <div class="about-text">
+            Engineering College Bikaner (ECB) is one of the premier engineering institutions in Rajasthan, established in 1995. With a commitment to excellence in technical education, ECB has been producing skilled engineers who contribute significantly to the nation's development.
+        </div>
+        <div class="about-text">
+            Our college is approved by AICTE and affiliated to Rajasthan Technical University. We offer undergraduate and postgraduate programs in various engineering disciplines, emphasizing both theoretical knowledge and practical skills.
+        </div>
+        <div class="about-text" style="margin-bottom: 0;">
+            The college boasts state-of-the-art infrastructure, experienced faculty, and a vibrant campus life that nurtures holistic development of students. Our placement record speaks volumes about the quality of education we provide.
+        </div>
+    </div>
+
+    <!-- Contact & Departments Grid -->
+    <div class="info-grid">
+        
+        <!-- Contact Information -->
+        <div class="content-card">
+            <div class="section-title">Contact Information</div>
+            
+            <div class="contact-item">
+                <div class="contact-icon icon-teal"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="contact-details">
+                    <div class="contact-label">Address</div>
+                    <div class="contact-value">Engineering College Bikaner<br>Karni Industrial Area, Pugal Road<br>Bikaner, Rajasthan - 334004</div>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon icon-purple"><i class="fa-solid fa-phone"></i></div>
+                <div class="contact-details">
+                    <div class="contact-label">Phone</div>
+                    <div class="contact-value">+91 151 2263271</div>
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <div class="contact-icon icon-blue"><i class="fa-regular fa-envelope"></i></div>
+                <div class="contact-details">
+                    <div class="contact-label">Email</div>
+                    <div class="contact-value">info@ecbikaner.ac.in</div>
+                </div>
+            </div>
+
+            <div class="contact-item" style="margin-bottom: 0;">
+                <div class="contact-icon icon-green"><i class="fa-solid fa-globe"></i></div>
+                <div class="contact-details">
+                    <div class="contact-label">Website</div>
+                    <div class="contact-value">www.ecbikaner.ac.in</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments -->
+        <div class="content-card">
+            <div class="section-title">Departments</div>
+            
+            <div class="dept-item">
+                <i class="fa-solid fa-book-open dept-icon"></i>
+                <span>Computer Science & Engineering</span>
+            </div>
+            
+            <div class="dept-item">
+                <i class="fa-solid fa-book-open dept-icon"></i>
+                <span>Mechanical Engineering</span>
+            </div>
+            
+            <div class="dept-item">
+                <i class="fa-solid fa-book-open dept-icon"></i>
+                <span>Civil Engineering</span>
+            </div>
+            
+            <div class="dept-item">
+                <i class="fa-solid fa-book-open dept-icon"></i>
+                <span>Electrical Engineering</span>
+            </div>
+            
+            <div class="dept-item">
+                <i class="fa-solid fa-book-open dept-icon"></i>
+                <span>Electronics & Communication</span>
+            </div>
+
+            <div class="dept-item" style="margin-bottom: 0;">
+                <i class="fa-solid fa-book-open dept-icon"></i>
+                <span>Information Technology</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campus Facilities -->
+    <div class="content-card">
+        <div class="section-title">Campus Facilities</div>
+        <div class="facilities-grid">
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Central Library with 50,000+ books</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Modern Computer Labs</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Research & Development Center</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Sports Complex</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Hostel Facilities</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Cafeteria</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Transportation</span>
+            </div>
+            <div class="facility-item">
+                <div class="facility-dot"></div>
+                <span>Medical Facilities</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div style="width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-question" style="font-size: 0.8rem;"></i>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Attendance</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+       <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-teal: #00a99d; /* Main Teal Color from screenshot */
+            --teal-dark: #008f84;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Status Colors */
+            --success-green: #22c55e;
+            --success-bg: #dcfce7;
+            --warning-orange: #f97316;
+            --danger-red: #ef4444;
+            --danger-bg: #fee2e2;
+            --purple-icon: #a855f7;
+            --purple-bg: #f3e8ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .btn-request-leave {
+            background-color: var(--primary-teal);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-request-leave:hover {
+            background-color: var(--teal-dark);
+        }
+
+        /* --- Top Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 140px;
+            position: relative;
+        }
+
+        /* Special Styling for First Card */
+        .stat-card.main-stat {
+            background-color: var(--primary-teal);
+            color: white;
+        }
+
+        .main-stat .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .main-stat .trend-icon {
+            font-size: 1.5rem;
+        }
+
+        .main-stat .stat-value {
+            font-size: 2.2rem;
+            font-weight: 500;
+        }
+
+        .main-stat .stat-label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* Styling for other cards */
+        .stat-card.white-stat {
+            padding-left: 1.5rem;
+        }
+
+        .stat-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .icon-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .icon-green { background: var(--success-bg); color: var(--success-green); }
+        .icon-red { background: var(--danger-bg); color: var(--danger-red); }
+        .icon-purple { background: var(--purple-bg); color: var(--purple-icon); }
+
+        .white-stat .stat-number {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .white-stat .stat-desc {
+            color: var(--text-grey);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* --- Subject-wise Attendance --- */
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: var(--text-dark);
+        }
+
+        .progress-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .progress-item {
+            width: 100%;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0.5rem;
+        }
+
+        .subject-info h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .subject-info span {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+        }
+
+        .percentage {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+
+        .text-green { color: var(--success-green); }
+        .text-orange { color: var(--warning-orange); }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 8px;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+
+        .bg-green { background-color: var(--success-green); }
+        .bg-orange { background-color: var(--warning-orange); }
+
+        /* --- Recent Attendance Table --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .attendance-table th {
+            text-align: left;
+            padding: 1rem 0;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.95rem;
+        }
+
+        .attendance-table td {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #f3f4f6;
+            color: var(--text-dark);
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+
+        .attendance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Pills */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-present {
+            background-color: var(--success-bg);
+            color: var(--success-green);
+        }
+
+        .status-absent {
+            background-color: var(--danger-bg);
+            color: var(--danger-red);
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-request-leave { width: 100%; justify-content: center; }
+            .percentage { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Smart Attendance</h1>
+        <button class="btn-request-leave" onclick="alert('Leave Request Modal')">
+            <i class="fa-regular fa-calendar"></i> Request Leave
+        </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <!-- Card 1: Overall -->
+        <div class="stat-card main-stat">
+            <div class="stat-top">
+                <i class="fa-solid fa-arrow-trend-up trend-icon"></i>
+                <div class="stat-value">87%</div>
+            </div>
+            <div class="stat-label">Overall Attendance</div>
+        </div>
+
+        <!-- Card 2: Attended -->
+        <div class="stat-card white-stat">
+            <div class="stat-row">
+                <div class="icon-circle icon-green">
+                    <i class="fa-regular fa-circle-check"></i>
+                </div>
+                <div class="stat-number">235</div>
+            </div>
+            <div class="stat-desc">Classes Attended</div>
+        </div>
+
+        <!-- Card 3: Missed -->
+        <div class="stat-card white-stat">
+            <div class="stat-row">
+                <div class="icon-circle icon-red">
+                    <i class="fa-regular fa-circle-xmark"></i>
+                </div>
+                <div class="stat-number">35</div>
+            </div>
+            <div class="stat-desc">Classes Missed</div>
+        </div>
+
+        <!-- Card 4: Total -->
+        <div class="stat-card white-stat">
+            <div class="stat-row">
+                <div class="icon-circle icon-purple">
+                    <i class="fa-regular fa-clock"></i>
+                </div>
+                <div class="stat-number">270</div>
+            </div>
+            <div class="stat-desc">Total Classes</div>
+        </div>
+    </div>
+
+    <!-- Subject-wise Attendance -->
+    <div class="section-card">
+        <div class="section-title">Subject-wise Attendance</div>
+        <div class="progress-list">
+            
+            <!-- Data Structures -->
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="subject-info">
+                        <h4>Data Structures</h4>
+                        <span>42 / 48 classes</span>
+                    </div>
+                    <div class="percentage text-green">87.5%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bg-green" style="width: 87.5%;"></div>
+                </div>
+            </div>
+
+            <!-- Computer Networks -->
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="subject-info">
+                        <h4>Computer Networks</h4>
+                        <span>38 / 45 classes</span>
+                    </div>
+                    <div class="percentage text-orange">84.4%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bg-orange" style="width: 84.4%;"></div>
+                </div>
+            </div>
+
+            <!-- Operating Systems -->
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="subject-info">
+                        <h4>Operating Systems</h4>
+                        <span>40 / 44 classes</span>
+                    </div>
+                    <div class="percentage text-green">90.9%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bg-green" style="width: 90.9%;"></div>
+                </div>
+            </div>
+
+            <!-- Database Management -->
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="subject-info">
+                        <h4>Database Management</h4>
+                        <span>35 / 42 classes</span>
+                    </div>
+                    <div class="percentage text-orange">83.3%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bg-orange" style="width: 83.3%;"></div>
+                </div>
+            </div>
+
+            <!-- Software Engineering -->
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="subject-info">
+                        <h4>Software Engineering</h4>
+                        <span>39 / 46 classes</span>
+                    </div>
+                    <div class="percentage text-orange">84.8%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bg-orange" style="width: 84.8%;"></div>
+                </div>
+            </div>
+
+            <!-- Web Development -->
+            <div class="progress-item">
+                <div class="progress-header">
+                    <div class="subject-info">
+                        <h4>Web Development</h4>
+                        <span>41 / 45 classes</span>
+                    </div>
+                    <div class="percentage text-green">91.1%</div>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill bg-green" style="width: 91.1%;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Recent Attendance -->
+    <div class="section-card">
+        <div class="section-title">Recent Attendance</div>
+        <div class="table-responsive">
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Date</th>
+                        <th style="width: 40%;">Subject</th>
+                        <th style="width: 20%;">Time</th>
+                        <th style="width: 20%;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-11-25</td>
+                        <td>Data Structures</td>
+                        <td>09:00 AM</td>
+                        <td><span class="status-pill status-present"><i class="fa-regular fa-circle-check"></i> Present</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-25</td>
+                        <td>Computer Networks</td>
+                        <td>11:00 AM</td>
+                        <td><span class="status-pill status-present"><i class="fa-regular fa-circle-check"></i> Present</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-24</td>
+                        <td>Operating Systems</td>
+                        <td>10:00 AM</td>
+                        <td><span class="status-pill status-present"><i class="fa-regular fa-circle-check"></i> Present</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-24</td>
+                        <td>Database Management</td>
+                        <td>02:00 PM</td>
+                        <td><span class="status-pill status-absent"><i class="fa-regular fa-circle-xmark"></i> Absent</span></td>
+                    </tr>
+                    <tr>
+                        <td>2024-11-23</td>
+                        <td>Software Engineering</td>
+                        <td>09:00 AM</td>
+                        <td><span class="status-pill status-present"><i class="fa-regular fa-circle-check"></i> Present</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div style="width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-question" style="font-size: 0.8rem;"></i>
+        </div>
+    </div>
+
+</body>
+</html>

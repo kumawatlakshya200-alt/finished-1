@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Schedule</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-teal: #00a99d;
+            --teal-light: #ccfbf1; /* Very light teal for backgrounds */
+            --teal-border: #99f6e4;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            --break-bg: #f3f4f6;
+            
+            /* Weekly Overview Pastel Colors */
+            --pastel-green: #dcfce7;
+            --pastel-purple: #f3e8ff;
+            --pastel-blue: #dbeafe;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .btn-download {
+            background-color: var(--primary-teal);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-download:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Day Selector --- */
+        .day-selector-card {
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 20px;
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            overflow-x: auto;
+        }
+
+        .day-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            background-color: #f3f4f6;
+            color: var(--text-grey);
+        }
+
+        .day-btn.active {
+            background-color: var(--primary-teal);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 169, 157, 0.3);
+        }
+
+        .day-btn:hover:not(.active) {
+            background-color: #e5e7eb;
+        }
+
+        /* --- Schedule Section --- */
+        .schedule-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Class Card Styling */
+        .class-card {
+            border: 1px solid var(--teal-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            transition: transform 0.2s;
+        }
+
+        .class-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 169, 157, 0.05);
+        }
+
+        .class-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .class-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-grey);
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .meta-item i {
+            color: var(--primary-teal);
+        }
+
+        .btn-details {
+            background-color: var(--teal-light);
+            color: var(--primary-teal); /* Darker teal for text contrast */
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            color: #0d9488;
+        }
+
+        .btn-details:hover {
+            background-color: #bbf7d0;
+        }
+
+        /* Break Time Styling */
+        .break-card {
+            background-color: var(--break-bg);
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-grey);
+            gap: 0.5rem;
+        }
+
+        .break-icon {
+            font-size: 1.2rem;
+        }
+        
+        .break-text {
+            font-weight: 500;
+        }
+
+        .break-time {
+            font-size: 0.9rem;
+        }
+
+        /* --- Weekly Overview --- */
+        .overview-container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .overview-card {
+            padding: 1.5rem;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 120px;
+        }
+
+        .bg-pastel-green { background-color: var(--pastel-green); }
+        .bg-pastel-purple { background-color: var(--pastel-purple); }
+        .bg-pastel-blue { background-color: var(--pastel-blue); }
+
+        .overview-number {
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: var(--text-dark);
+        }
+
+        .overview-label {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .overview-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .class-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-details { width: 100%; }
+            .overview-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-download { width: 100%; justify-content: center; }
+            .day-selector-card { padding-bottom: 0.5rem; } /* Scroll hint */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Class Schedule</h1>
+        <button class="btn-download" onclick="alert('Downloading Schedule...')">
+            <i class="fa-regular fa-calendar-check"></i> Download Schedule
+        </button>
+    </div>
+
+    <!-- Day Selector -->
+    <div class="day-selector-card">
+        <button class="day-btn active">Monday</button>
+        <button class="day-btn">Tuesday</button>
+        <button class="day-btn">Wednesday</button>
+        <button class="day-btn">Thursday</button>
+        <button class="day-btn">Friday</button>
+        <button class="day-btn">Saturday</button>
+    </div>
+
+    <!-- Schedule List -->
+    <div class="schedule-container">
+        <div class="section-title">Monday's Schedule</div>
+        
+        <div class="schedule-list">
+            
+            <!-- Class 1 -->
+            <div class="class-card">
+                <div class="class-info">
+                    <h3>Data Structures</h3>
+                    <div class="class-meta">
+                        <div class="meta-item"><i class="fa-regular fa-clock"></i> 09:00 - 10:00</div>
+                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Room 301</div>
+                        <div class="meta-item"><i class="fa-regular fa-user"></i> Dr. A. Kumar</div>
+                    </div>
+                </div>
+                <button class="btn-details" onclick="viewDetails('Data Structures')">View Details</button>
+            </div>
+
+            <!-- Class 2 -->
+            <div class="class-card">
+                <div class="class-info">
+                    <h3>Computer Networks</h3>
+                    <div class="class-meta">
+                        <div class="meta-item"><i class="fa-regular fa-clock"></i> 10:00 - 11:00</div>
+                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Lab 2</div>
+                        <div class="meta-item"><i class="fa-regular fa-user"></i> Dr. S. Sharma</div>
+                    </div>
+                </div>
+                <button class="btn-details" onclick="viewDetails('Computer Networks')">View Details</button>
+            </div>
+
+            <!-- Break -->
+            <div class="break-card">
+                <i class="fa-regular fa-clock break-icon"></i>
+                <div class="break-text">Break Time</div>
+                <div class="break-time">11:00 - 11:30</div>
+            </div>
+
+            <!-- Class 3 -->
+            <div class="class-card">
+                <div class="class-info">
+                    <h3>Operating Systems</h3>
+                    <div class="class-meta">
+                        <div class="meta-item"><i class="fa-regular fa-clock"></i> 11:30 - 12:30</div>
+                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Room 305</div>
+                        <div class="meta-item"><i class="fa-regular fa-user"></i> Dr. R. Patel</div>
+                    </div>
+                </div>
+                <button class="btn-details" onclick="viewDetails('Operating Systems')">View Details</button>
+            </div>
+
+            <!-- Class 4 -->
+            <div class="class-card">
+                <div class="class-info">
+                    <h3>Database Management</h3>
+                    <div class="class-meta">
+                        <div class="meta-item"><i class="fa-regular fa-clock"></i> 12:30 - 01:30</div>
+                        <div class="meta-item"><i class="fa-solid fa-location-dot"></i> Room 302</div>
+                        <div class="meta-item"><i class="fa-regular fa-user"></i> Dr. M. Singh</div>
+                    </div>
+                </div>
+                <button class="btn-details" onclick="viewDetails('Database Management')">View Details</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Weekly Overview -->
+    <div class="overview-container">
+        <div class="section-title">Weekly Overview</div>
+        <div class="overview-grid">
+            
+            <div class="overview-card bg-pastel-green">
+                <div class="overview-number">32</div>
+                <div class="overview-label">Classes This Week</div>
+            </div>
+
+            <div class="overview-card bg-pastel-purple">
+                <div class="overview-number">24</div>
+                <div class="overview-label">Lab Hours</div>
+            </div>
+
+            <div class="overview-card bg-pastel-blue">
+                <div class="overview-number">8</div>
+                <div class="overview-label">Tutorial Hours</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div style="width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-question" style="font-size: 0.8rem;"></i>
+        </div>
+    </div>
+
+    <script>
+        function viewDetails(subject) {
+            alert('Viewing schedule details for: ' + subject);
+        }
+
+        // Simple Day Selector Logic
+        const dayBtns = document.querySelectorAll('.day-btn');
+        dayBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                dayBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // In a real app, this would filter the schedule
+                const scheduleTitle = document.querySelector('.schedule-container .section-title');
+                scheduleTitle.textContent = `${btn.textContent}'s Schedule`;
+            });
+        });
+    </script>
+
+</body>
+</html>

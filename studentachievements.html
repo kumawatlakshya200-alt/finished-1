@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            --border-light: #e5e7eb;
+
+            /* Icon Colors */
+            --yellow-icon: #eab308;
+            --yellow-bg: #fef9c3;
+            --purple-icon: #a855f7;
+            --purple-bg: #f3e8ff;
+            --blue-icon: #3b82f6;
+            --blue-bg: #dbeafe;
+            --green-icon: #22c55e;
+            --green-bg: #dcfce7;
+            --orange-icon: #f97316;
+            --orange-bg: #ffedd5;
+            --teal-icon: #00a99d;
+            --teal-bg: #ccfbf1;
+
+            /* Badge Colors */
+            --badge-gray-bg: #f3f4f6;
+            --badge-gray-text: #4b5563;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* --- Stats Section --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bg-yellow { background-color: var(--yellow-bg); color: var(--yellow-icon); }
+        .bg-purple { background-color: var(--purple-bg); color: var(--purple-icon); }
+        .bg-blue { background-color: var(--blue-bg); color: var(--blue-icon); }
+        .bg-green { background-color: var(--green-bg); color: var(--green-icon); }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+            font-weight: 400;
+        }
+
+        /* --- Achievements List --- */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .achievement-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .card-icon-box {
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            color: white;
+        }
+
+        .box-yellow { background-color: var(--yellow-icon); }
+        .box-purple { background-color: var(--purple-icon); }
+        .box-blue { background-color: var(--blue-icon); }
+        .box-green { background-color: var(--green-icon); }
+        .box-teal { background-color: var(--teal-icon); }
+        .box-orange { background-color: var(--orange-icon); }
+
+        .card-content {
+            flex-grow: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .category-badge {
+            background-color: var(--badge-gray-bg);
+            color: var(--badge-gray-text);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .achievement-desc {
+            font-size: 0.95rem;
+            color: var(--text-grey);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .achievement-date {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            font-weight: 400;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .achievements-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .achievement-card { padding: 1.5rem; }
+            .card-icon-box { width: 45px; height: 45px; font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Achievements</h1>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats-grid">
+        <!-- Total Awards -->
+        <div class="stat-card">
+            <div class="icon-wrapper bg-yellow">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="stat-number">12</div>
+            <div class="stat-label">Total Awards</div>
+        </div>
+
+        <!-- Certificates -->
+        <div class="stat-card">
+            <div class="icon-wrapper bg-purple">
+                <i class="fa-solid fa-certificate"></i>
+            </div>
+            <div class="stat-number">8</div>
+            <div class="stat-label">Certificates</div>
+        </div>
+
+        <!-- Publications -->
+        <div class="stat-card">
+            <div class="icon-wrapper bg-blue">
+                <i class="fa-solid fa-medal"></i>
+            </div>
+            <div class="stat-number">2</div>
+            <div class="stat-label">Publications</div>
+        </div>
+
+        <!-- Competitions -->
+        <div class="stat-card">
+            <div class="icon-wrapper bg-green">
+                <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="stat-number">6</div>
+            <div class="stat-label">Competitions</div>
+        </div>
+    </div>
+
+    <!-- Achievements Grid -->
+    <div class="achievements-grid">
+        
+        <!-- Card 1 -->
+        <div class="achievement-card">
+            <div class="card-icon-box box-yellow">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="achievement-title">Best Project Award</div>
+                    <span class="category-badge">Academic</span>
+                </div>
+                <div class="achievement-desc">Won best project award for E-commerce Website in Web Development</div>
+                <div class="achievement-date">October 2024</div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="achievement-card">
+            <div class="card-icon-box box-purple">
+                <i class="fa-solid fa-medal"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="achievement-title">Hackathon Winner</div>
+                    <span class="category-badge">Technical</span>
+                </div>
+                <div class="achievement-desc">1st Place in Inter-College Hackathon 2024</div>
+                <div class="achievement-date">September 2024</div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="achievement-card">
+            <div class="card-icon-box box-blue">
+                <i class="fa-regular fa-star"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="achievement-title">Academic Excellence</div>
+                    <span class="category-badge">Academic</span>
+                </div>
+                <div class="achievement-desc">Semester Topper with 8.9 CGPA in 5th Semester</div>
+                <div class="achievement-date">July 2024</div>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="achievement-card">
+            <div class="card-icon-box box-green">
+                <i class="fa-solid fa-award"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="achievement-title">Research Paper Published</div>
+                    <span class="category-badge">Research</span>
+                </div>
+                <div class="achievement-desc">Published research paper on AI in IEEE Conference</div>
+                <div class="achievement-date">August 2024</div>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="achievement-card">
+            <div class="card-icon-box box-teal">
+                <i class="fa-solid fa-medal"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="achievement-title">Dean's List</div>
+                    <span class="category-badge">Academic</span>
+                </div>
+                <div class="achievement-desc">Featured in Dean's List for outstanding academic performance</div>
+                <div class="achievement-date">June 2024</div>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="achievement-card">
+            <div class="card-icon-box box-orange">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <div class="card-content">
+                <div class="card-header">
+                    <div class="achievement-title">Coding Competition</div>
+                    <span class="category-badge">Technical</span>
+                </div>
+                <div class="achievement-desc">2nd Place in State Level Coding Competition</div>
+                <div class="achievement-date">May 2024</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div style="width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-question" style="font-size: 0.8rem;"></i>
+        </div>
+    </div>
+
+</body>
+</html>

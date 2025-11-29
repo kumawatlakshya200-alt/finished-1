@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Colors */
+            --teal-primary: #00a99d;
+            --teal-light-bg: #ccfbf1;
+            --teal-text: #0f766e;
+            
+            --blue-icon-bg: #dbeafe;
+            --blue-icon: #3b82f6;
+            
+            --green-btn-bg: #dcfce7;
+            --green-btn-text: #16a34a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- Header / Filters --- */
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem; /* For scrollbar spacing if needed */
+        }
+
+        .filter-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 20px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            background-color: var(--card-bg);
+            color: var(--text-grey);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .filter-btn.active {
+            background-color: var(--teal-primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 169, 157, 0.3);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background-color: #f3f4f6;
+        }
+
+        /* --- Materials Grid --- */
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .material-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Card Header */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .icon-box {
+            width: 55px;
+            height: 55px;
+            background-color: var(--blue-icon-bg);
+            color: var(--blue-icon);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .pages-badge {
+            background-color: var(--teal-light-bg);
+            color: var(--teal-text);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Card Content */
+        .material-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .material-subject {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+            margin-bottom: 1.5rem;
+        }
+
+        .material-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .meta-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Card Actions */
+        .actions-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-view {
+            background-color: var(--blue-icon-bg);
+            color: var(--blue-icon);
+        }
+        
+        .btn-view:hover {
+            background-color: #bfdbfe;
+        }
+
+        .btn-download {
+            background-color: var(--green-btn-bg);
+            color: var(--green-btn-text);
+        }
+
+        .btn-download:hover {
+            background-color: #bbf7d0;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .materials-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .materials-grid { grid-template-columns: 1fr; }
+            .filter-container { padding-bottom: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Filters -->
+    <div class="filter-container">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Data Structures</button>
+        <button class="filter-btn">Computer Networks</button>
+        <button class="filter-btn">Operating Systems</button>
+        <button class="filter-btn">Database Management</button>
+        <button class="filter-btn">Web Development</button>
+    </div>
+
+    <!-- Grid -->
+    <div class="materials-grid">
+        
+        <!-- Card 1 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">45 pages</span>
+            </div>
+            <div class="material-title">Trees and Graphs</div>
+            <div class="material-subject">Data Structures</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. A. Kumar</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-20</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">2.5 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('Trees')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('Trees')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">32 pages</span>
+            </div>
+            <div class="material-title">Sorting Algorithms</div>
+            <div class="material-subject">Data Structures</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. A. Kumar</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-15</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">1.8 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('Sorting')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('Sorting')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">38 pages</span>
+            </div>
+            <div class="material-title">TCP/IP Protocol Suite</div>
+            <div class="material-subject">Computer Networks</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. S. Sharma</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-18</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">2.2 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('TCP/IP')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('TCP/IP')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">28 pages</span>
+            </div>
+            <div class="material-title">Network Layer Protocols</div>
+            <div class="material-subject">Computer Networks</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. S. Sharma</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-12</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">1.5 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('Network Layer')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('Network Layer')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">35 pages</span>
+            </div>
+            <div class="material-title">Process Scheduling</div>
+            <div class="material-subject">Operating Systems</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. R. Patel</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-19</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">2.0 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('Scheduling')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('Scheduling')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">42 pages</span>
+            </div>
+            <div class="material-title">Memory Management</div>
+            <div class="material-subject">Operating Systems</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. R. Patel</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-14</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">2.3 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('Memory')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('Memory')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">30 pages</span>
+            </div>
+            <div class="material-title">SQL Queries and Joins</div>
+            <div class="material-subject">Database Management</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. M. Singh</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-17</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">1.7 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('SQL')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('SQL')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">25 pages</span>
+            </div>
+            <div class="material-title">Normalization</div>
+            <div class="material-subject">Database Management</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. M. Singh</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-10</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">1.4 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('Normalization')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('Normalization')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">33 pages</span>
+            </div>
+            <div class="material-title">SDLC Models</div>
+            <div class="material-subject">Software Engineering</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. P. Gupta</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-16</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">1.9 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('SDLC')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('SDLC')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 10 -->
+        <div class="material-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <span class="pages-badge">40 pages</span>
+            </div>
+            <div class="material-title">React Fundamentals</div>
+            <div class="material-subject">Web Development</div>
+            <div class="material-meta">
+                <div class="meta-row"><span>Uploaded by:</span> <span class="meta-value">Dr. N. Verma</span></div>
+                <div class="meta-row"><span>Date:</span> <span class="meta-value">2024-11-21</span></div>
+                <div class="meta-row"><span>Size:</span> <span class="meta-value">2.4 MB</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewMaterial('React')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download" onclick="downloadMaterial('React')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div style="width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-question" style="font-size: 0.8rem;"></i>
+        </div>
+    </div>
+
+    <script>
+        // Simple filter interaction for visual effect
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        function viewMaterial(topic) {
+            alert('Opening viewer for ' + topic);
+        }
+
+        function downloadMaterial(topic) {
+            alert('Downloading ' + topic);
+        }
+    </script>
+</body>
+</html>

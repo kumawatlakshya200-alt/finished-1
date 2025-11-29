@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDYA-CUE Student Portal</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#00a99d', /* The specific teal color */
+                        'primary-dark': '#008f84',
+                        sidebar: '#ffffff',
+                        body: '#f3f4f6',
+                        'icon-teal': '#e0f2f1',
+                        'icon-purple': '#f3e5f5',
+                        'icon-blue': '#e3f2fd',
+                        'icon-green': '#e8f5e9',
+                        'icon-orange': '#fff3e0',
+                        'icon-pink': '#fce4ec',
+                        'icon-indigo': '#e8eaf6',
+                        'icon-red': '#ffebee',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa; 
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg hidden md:flex flex-col h-full z-10">
+            <!-- Brand -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl">
+                    E
+                </div>
+                <div>
+                    <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                    <p class="text-xs text-gray-500">Student Portal</p>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
+                
+                <a href="student.html" class="flex items-center gap-4 px-4 py-3 bg-primary text-white rounded-lg shadow-md transition-all">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">Profile</span>
+                </a>
+ 
+                <a href="studentattendance.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span>Smart Attendance</span>
+                </a>
+
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-regular fa-calendar w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Class Schedule</span>
+                </a>
+
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-book-open w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Exams & Scores</span>
+                </a>
+
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-flask w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Skills & Lab</span>
+                </a>
+
+                <a href="studentachievements.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-trophy w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Achievements</span>
+                </a>
+
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-medal w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Sports Info</span>
+                </a>
+
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-chalkboard-user w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Professors</span>
+                </a>
+
+                <a href="studentaboutcollege.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-circle-info w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>About College</span>
+                </a>
+
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-regular fa-file-lines w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>PYQ Papers</span>
+                </a>
+
+                <a href="studentnotes.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group">
+                    <i class="fa-solid fa-book w-5 text-gray-400 group-hover:text-primary"></i>
+                    <span>Notes</span>
+                </a>
+            </nav>
+
+            <!-- Logout -->
+            <div class="p-4 border-t border-gray-100">
+                <a href="../Login Page/index.html" class="flex items-center gap-4 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="flex-1 flex flex-col h-full overflow-hidden relative">
+            
+            <!-- Header -->
+            <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 md:px-8 z-20">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Breadcrumb/Title Mobile -->
+                <span class="md:hidden font-bold text-primary">My Profile</span>
+
+                <!-- Spacer for desktop alignment -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6">
+                    <button class="text-gray-500 hover:text-primary transition-colors" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block">
+                            <p class="text-sm font-semibold text-gray-800">Himanshu Saini</p>
+                            <p class="text-xs text-gray-500">2021CSE001</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-lg shadow-md cursor-pointer">
+                            H
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 pb-20 custom-scrollbar">
+                
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-gray-700">My Profile</h2>
+                    <!-- Edit Profile (Mobile view usually hides this or moves it, kept here for consistency) -->
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    
+                    <!-- Left Profile Card -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden">
+                        
+                        <div class="relative mb-4">
+                            <!-- Placeholder for Profile Image - Using a gradient or placehold.co if external image fails -->
+                            <div class="w-32 h-32 rounded-full p-1 border-4 border-primary/20">
+                                <img src="https://ui-avatars.com/api/?name=Himanshu+Saini&background=random" alt="Himanshu" class="w-full h-full rounded-full object-cover">
+                            </div>
+                            <span class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></span>
+                        </div>
+
+                        <h3 class="text-lg font-bold text-gray-800">Himanshu Saini</h3>
+                        <p class="text-gray-500 text-sm mb-1">B.Tech CSE</p>
+                        <p class="text-gray-400 text-xs mb-8">2021CSE001</p>
+
+                        <div class="flex items-center justify-between w-full px-2">
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-primary">85%</p>
+                                <p class="text-xs text-gray-500 mt-1">Attendance</p>
+                            </div>
+                            <div class="h-8 w-px bg-gray-200"></div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-primary">8.5</p>
+                                <p class="text-xs text-gray-500 mt-1">CGPA</p>
+                            </div>
+                            <div class="h-8 w-px bg-gray-200"></div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-primary">12</p>
+                                <p class="text-xs text-gray-500 mt-1">Projects</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Personal Info Card -->
+                  <div class="bg-white rounded-2xl p-6 shadow-sm lg:col-span-2 relative">
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="font-medium text-gray-700">Personal Information</h3>
+                            <button class="bg-primary hover:bg-primary-dark text-white text-sm px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm">
+                                <i class="fa-regular fa-pen-to-square"></i> Edit Profile
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                            
+                            <!-- Email -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-teal flex items-center justify-center text-primary flex-shrink-0">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Email Address</p>
+                                    <p class="text-sm font-medium text-gray-800 break-all">himanshu.saini@ecb.ac.in</p>
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-purple flex items-center justify-center text-purple-500 flex-shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Phone Number</p>
+                                    <p class="text-sm font-medium text-gray-800">+91 9876543210</p>
+                                </div>
+                            </div>
+
+                            <!-- Roll No -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-blue flex items-center justify-center text-blue-500 flex-shrink-0">
+                                    <i class="fa-solid fa-hashtag"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Roll Number</p>
+                                    <p class="text-sm font-medium text-gray-800">2021CSE001</p>
+                                </div>
+                            </div>
+
+                            <!-- Course -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-green flex items-center justify-center text-green-500 flex-shrink-0">
+                                    <i class="fa-solid fa-book-open"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Course</p>
+                                    <p class="text-sm font-medium text-gray-800">B.Tech CSE</p>
+                                </div>
+                            </div>
+
+
+                            <!-- Semester -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-orange flex items-center justify-center text-orange-400 flex-shrink-0">
+                                    <i class="fa-regular fa-calendar"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Current Semester</p>
+                                    <p class="text-sm font-medium text-gray-800">6th Semester</p>
+                                </div>
+                            </div>
+
+                            <!-- Batch -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-pink flex items-center justify-center text-pink-500 flex-shrink-0">
+                                    <i class="fa-regular fa-calendar-check"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Batch</p>
+                                    <p class="text-sm font-medium text-gray-800">2021-2025</p>
+                                </div>
+                            </div>
+
+                            <!-- DOB -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-indigo flex items-center justify-center text-indigo-500 flex-shrink-0">
+                                    <i class="fa-regular fa-calendar-days"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Date of Birth</p>
+                                    <p class="text-sm font-medium text-gray-800">15 March 2003</p>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-xl bg-icon-red flex items-center justify-center text-red-400 flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-0.5">Address</p>
+                                    <p class="text-sm font-medium text-gray-800">Bikaner, Rajasthan, India</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Progress -->
+                <div>
+                    <h2 class="text-sm font-medium text-gray-700 mb-4">Academic Progress</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                        
+                        <!-- Sem 1 -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm text-center border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                            <p class="text-xs text-gray-500 mb-2">Sem 1</p>
+                            <p class="text-3xl font-medium text-primary">8.2</p>
+                        </div>
+
+                        <!-- Sem 2 -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm text-center border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                            <p class="text-xs text-gray-500 mb-2">Sem 2</p>
+                            <p class="text-3xl font-medium text-primary">8.4</p>
+                        </div>
+
+                        <!-- Sem 3 -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm text-center border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                            <p class="text-xs text-gray-500 mb-2">Sem 3</p>
+                            <p class="text-3xl font-medium text-primary">8.6</p>
+                        </div>
+
+                        <!-- Sem 4 -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm text-center border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                            <p class="text-xs text-gray-500 mb-2">Sem 4</p>
+                            <p class="text-3xl font-medium text-primary">8.8</p>
+                        </div>
+
+                        <!-- Sem 5 -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm text-center border border-transparent hover:border-primary/20 transition-all cursor-pointer">
+                            <p class="text-xs text-gray-500 mb-2">Sem 5</p>
+                            <p class="text-3xl font-medium text-primary">8.5</p>
+                        </div>
+
+                        <!-- Sem 6 -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm text-center border border-transparent hover:border-primary/20 transition-all cursor-pointer flex flex-col justify-center">
+                            <p class="text-xs text-gray-500 mb-2">Sem 6</p>
+                            <p class="text-xl font-medium text-primary mt-1">Ongoing</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Chatbot FAB -->
+            <button class="absolute bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-primary-dark transition-transform hover:scale-105 z-30" title="AI Chat Assistant">
+                <i class="fa-solid fa-robot"></i>
+            </button>
+            <button class="absolute bottom-4 right-2 w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs z-30" title="Help">
+                ?
+            </button>
+
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-0 hidden md:hidden glass-effect"></div>
+
+        <!-- Mobile Sidebar (Cloned for behaviour) -->
+        <aside id="mobileSidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 md:hidden flex flex-col h-full">
+            <!-- Brand -->
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl">E</div>
+                    <div>
+                        <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                        <p class="text-xs text-gray-500">Student Portal</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-500" title="Close sidebar"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- Menu (Duplicate of desktop menu for simplicity in single file) -->
+            <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                <a href="student.html" class="flex items-center gap-4 px-4 py-3 bg-primary text-white rounded-lg shadow-md">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">Profile</span>
+                </a>
+                <a href="studentattendance.html" class="flex items-center gap-4 px-4 py-3 bg-primary text-white rounded-lg shadow-md">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Smart Attendance</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors">
+                    <i class="fa-regular fa-calendar w-5"></i>
+                    <span>Class Schedule</span>
+                </a>
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors">
+                    <i class="fa-solid fa-book-open w-5"></i>
+                    <span>Exams & Scores</span>
+                </a>
+                <!-- Shortened list for mobile demo consistency -->
+                <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors">
+                    <i class="fa-solid fa-flask w-5"></i>
+                    <span>Skills & Lab</span>
+                </a>
+                <a href="../Login Page/index.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5 text-red-500"></i>
+                    <span class="text-red-500">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <!-- Dynamic fragment loader: load page main fragment into `#mainContent` so header/sidebar persist -->
+    <script>
+        (function(){
+            // Intercept same-origin .html link clicks (except index.html) and load only the main fragment
+            document.addEventListener('click', function(e){
+                const a = e.target.closest('a');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                if (!href) return;
+                if (href.endsWith('.html') && href !== 'index.html' && a.getAttribute('target') !== '_blank') {
+                    // let links that are intended to logout (index.html) perform full navigation
+                    // For other pages, fetch and replace main content only
+                    e.preventDefault();
+                    loadFragment(href, true);
+                    try { history.pushState({url: href}, '', href); } catch (err) { /* ignore */ }
+                }
+            });
+
+            async function loadFragment(url, scrollTop){
+                const main = document.getElementById('mainContent');
+                if (!main) { window.location.href = url; return; }
+                try {
+                    const res = await fetch(url, {cache: 'no-store'});
+                    if (!res.ok) { window.location.href = url; return; }
+                    const text = await res.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+
+                    // Prefer an element with id 'mainContent' in the fetched page, otherwise a .card wrapper, otherwise body
+                    let fragment = doc.querySelector('#mainContent');
+                    if (!fragment) fragment = doc.querySelector('.card');
+                    if (!fragment) fragment = doc.body;
+
+                    // Replace main inner content while keeping header/sidebar
+                    main.innerHTML = fragment.innerHTML;
+
+                    // Update page title if available
+                    const t = doc.querySelector('title');
+                    if (t) document.title = t.textContent;
+
+                    if (scrollTop) window.scrollTo(0,0);
+                } catch (err) {
+                    console.error('Failed loading fragment', err);
+                    window.location.href = url;
+                }
+            }
+
+            // Handle back/forward navigation
+            window.addEventListener('popstate', function(e){
+                const url = location.pathname.split('/').pop() || 'studentDashboard.html';
+                if (url === 'index.html') { window.location.href = url; return; }
+                loadFragment(url, true);
+            });
+        })();
+    </script>
+</body>
+</html>
+

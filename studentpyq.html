@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Year Question Papers</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Colors */
+            --teal-primary: #00a99d;
+            --teal-light-bg: #ccfbf1;
+            --teal-text: #0f766e;
+            
+            --purple-primary: #a855f7;
+            --purple-light-bg: #f3e8ff;
+            --purple-text: #9333ea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .btn-download-all {
+            background-color: var(--teal-primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-download-all:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Papers Grid --- */
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .paper-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .paper-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Card Header */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            background-color: var(--teal-light-bg);
+            color: var(--teal-text);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .semester-tag {
+            background-color: var(--purple-light-bg);
+            color: var(--purple-text);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Card Content */
+        .paper-subject {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        .paper-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .meta-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Card Actions */
+        .actions-row {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.7rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .btn-view {
+            background-color: var(--teal-light-bg);
+            color: var(--teal-text);
+        }
+        
+        .btn-view:hover {
+            background-color: #bbf7d0;
+        }
+
+        .btn-download-item {
+            background-color: var(--purple-light-bg);
+            color: var(--purple-text);
+        }
+
+        .btn-download-item:hover {
+            background-color: #e9d5ff;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .papers-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .papers-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-download-all { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1 class="page-title">Previous Year Question Papers</h1>
+        <button class="btn-download-all" onclick="alert('Downloading all papers...')">
+            <i class="fa-solid fa-download"></i> Download All
+        </button>
+    </div>
+
+    <div class="papers-grid">
+        
+        <!-- Card 1 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Data Structures</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2023</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">245</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('DS 2023')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('DS 2023')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Data Structures</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2022</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">189</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('DS 2022')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('DS 2022')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Computer Networks</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2023</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">312</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('CN 2023')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('CN 2023')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">Mid Semester</span>
+            </div>
+            <div class="paper-subject">Computer Networks</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2022</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">156</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('CN 2022')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('CN 2022')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Operating Systems</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2023</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">278</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('OS 2023')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('OS 2023')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Operating Systems</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2022</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">198</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('OS 2022')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('OS 2022')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Database Management</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2023</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">295</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('DBMS 2023')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('DBMS 2023')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">Mid Semester</span>
+            </div>
+            <div class="paper-subject">Database Management</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2022</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">167</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('DBMS 2022')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('DBMS 2022')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Software Engineering</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2023</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">234</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('SE 2023')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('SE 2023')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+        <!-- Card 10 -->
+        <div class="paper-card">
+            <div class="card-top">
+                <div class="icon-box"><i class="fa-regular fa-file-lines"></i></div>
+                <span class="semester-tag">End Semester</span>
+            </div>
+            <div class="paper-subject">Web Development</div>
+            <div class="paper-meta">
+                <div class="meta-row"><span>Year:</span> <span class="meta-value">2023</span></div>
+                <div class="meta-row"><span>Semester:</span> <span class="meta-value">6th</span></div>
+                <div class="meta-row"><span>Downloads:</span> <span class="meta-value">289</span></div>
+            </div>
+            <div class="actions-row">
+                <button class="btn-action btn-view" onclick="viewPaper('Web 2023')"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-download-item" onclick="downloadPaper('Web 2023')"><i class="fa-solid fa-download"></i> Download</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div style="width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+            <i class="fa-solid fa-question" style="font-size: 0.8rem;"></i>
+        </div>
+    </div>
+
+    <script>
+        function viewPaper(paperId) {
+            alert('Opening preview for ' + paperId);
+        }
+
+        function downloadPaper(paperId) {
+            alert('Downloading ' + paperId);
+        }
+    </script>
+</body>
+</html>
