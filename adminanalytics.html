@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Colors */
+            --teal-primary: #00a99d;
+            --blue-primary: #3b82f6;
+            --green-primary: #22c55e;
+            --purple-primary: #a855f7;
+            --orange-primary: #f97316;
+            --pink-primary: #ec4899;
+            
+            /* Gradients */
+            --teal-gradient: linear-gradient(135deg, #00a99d, #2dd4bf);
+            --blue-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+            --green-gradient: linear-gradient(135deg, #22c55e, #4ade80);
+            --purple-gradient: linear-gradient(135deg, #a855f7, #c084fc);
+            --orange-gradient: linear-gradient(135deg, #f97316, #fb923c);
+            --pink-gradient: linear-gradient(135deg, #ec4899, #f472b6);
+            
+            /* Performance Badges */
+            --badge-green-bg: #dcfce7; --badge-green-text: #16a34a;
+            --badge-blue-bg: #dbeafe; --badge-blue-text: #1e40af;
+            --badge-purple-bg: #f3e8ff; --badge-purple-text: #9333ea;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: var(--text-grey);
+            font-weight: 400;
+        }
+
+        /* --- Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 1.2rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 150px;
+            position: relative;
+        }
+
+        .stat-card.teal { background: var(--teal-gradient); }
+        .stat-card.blue { background: var(--blue-gradient); }
+        .stat-card.green { background: var(--green-gradient); }
+        .stat-card.purple { background: var(--purple-gradient); }
+        .stat-card.orange { background: var(--orange-gradient); }
+        .stat-card.pink { background: var(--pink-gradient); }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .growth-badge {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 0.5rem;
+            width: fit-content;
+        }
+
+        /* --- Charts Grid --- */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            font-weight: 400;
+        }
+
+        .card-icon {
+            color: var(--teal-primary);
+            font-size: 1.2rem;
+        }
+
+        .chart-container {
+            flex-grow: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Recent Activity --- */
+        .activity-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .activity-item {
+            background-color: #f9fafb;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .activity-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .dot-blue { background-color: var(--blue-primary); }
+        .dot-green { background-color: var(--green-primary); }
+        .dot-purple { background-color: var(--purple-primary); }
+        .dot-orange { background-color: var(--orange-primary); }
+        .dot-teal { background-color: var(--teal-primary); }
+        .dot-pink { background-color: var(--pink-primary); }
+
+        .activity-content {
+            flex-grow: 1;
+        }
+
+        .activity-text {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .activity-meta {
+            font-size: 0.75rem;
+            color: var(--text-grey);
+        }
+
+        /* --- Performance Summary Cards --- */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .summary-card {
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-card.green { background: var(--green-gradient); }
+        .summary-card.blue { background: var(--blue-gradient); }
+        .summary-card.purple { background: var(--purple-gradient); }
+
+        .summary-header {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-desc {
+            font-size: 0.85rem;
+            opacity: 0.85;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1400px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .chart-container-dept {
+            position: relative;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .help-btn {
+            width: 35px;
+            height: 35px;
+            background: #1f2937;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 1024px) {
+            .charts-grid { grid-template-columns: 1fr; }
+            .summary-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+        .bg-primary { background-color: #0ea5e9; }
+        .text-primary { color: #0ea5e9; }
+        .bg-body { background-color: #f8f9fa; }
+        .active-nav-link { background-color: #e0f2fe; color: #0369a1; }
+        .nav-link:hover { background-color: #f3f4f6; }
+        .help-btn { width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .glass-effect { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+<!-- Desktop Sidebar -->
+<div class="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white shadow-lg flex-col">
+    <!-- Sidebar Header -->
+    <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+            <div>
+                <h1 class="font-bold text-gray-800">Admin Portal</h1>
+                <p class="text-xs text-gray-500">Management</p>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+        <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-user-graduate text-lg"></i>
+            <span>Students</span>
+        </a>
+        <a href="adminteacher.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+            <span>Teachers</span>
+        </a>
+        <a href="admincourses.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-book text-lg"></i>
+            <span>Courses</span>
+        </a>
+        <a href="adminanalytics.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+            <i class="fa-solid fa-chart-bar text-lg"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="adminsetting.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+</div>
+
+<!-- Main Content Wrapper -->
+<div class="md:ml-64 flex flex-col h-screen">
+    <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-0 md:px-0 z-20 flex-shrink-0 sticky top-0">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Spacer -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" onclick="toggleDarkMode()" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </header>
+    <!-- Scrollable Content -->
+    <div id="dashboard-content" class="flex-1 overflow-y-auto custom-scrollbar p-6">
+
+    <div class="page-header">
+        <h1 class="page-title">Analytics Dashboard</h1>
+        <div class="page-subtitle">Comprehensive insights and performance metrics</div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card teal">
+            <i class="fa-solid fa-user-group stat-icon"></i>
+            <div>
+                <div class="stat-value">5,234</div>
+                <div class="stat-label">Total Students</div>
+            </div>
+            <div class="growth-badge">+12%</div>
+        </div>
+        <div class="stat-card blue">
+            <i class="fa-solid fa-book-open stat-icon"></i>
+            <div>
+                <div class="stat-value">156</div>
+                <div class="stat-label">Active Courses</div>
+            </div>
+            <div class="growth-badge">+5%</div>
+        </div>
+        <div class="stat-card green">
+            <i class="fa-solid fa-certificate stat-icon"></i>
+            <div>
+                <div class="stat-value">94.5%</div>
+                <div class="stat-label">Pass Rate</div>
+            </div>
+            <div class="growth-badge">+2.3%</div>
+        </div>
+        <div class="stat-card purple">
+            <i class="fa-regular fa-calendar-check stat-icon"></i>
+            <div>
+                <div class="stat-value">92.1%</div>
+                <div class="stat-label">Attendance</div>
+            </div>
+            <div class="growth-badge">+1.5%</div>
+        </div>
+        <div class="stat-card orange">
+            <i class="fa-solid fa-chalkboard-user stat-icon"></i>
+            <div>
+                <div class="stat-value">287</div>
+                <div class="stat-label">Faculty</div>
+            </div>
+            <div class="growth-badge">+8</div>
+        </div>
+        <div class="stat-card pink">
+            <i class="fa-solid fa-chart-line stat-icon"></i>
+            <div>
+                <div class="stat-value">8.45</div>
+                <div class="stat-label">Avg CGPA</div>
+            </div>
+            <div class="growth-badge">+0.3</div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-grid">
+        <!-- Attendance Trends -->
+        <div class="chart-card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Attendance Trends</div>
+                    <div class="card-subtitle">Monthly attendance comparison</div>
+                </div>
+                <i class="fa-solid fa-chart-simple card-icon"></i>
+            </div>
+            <div class="chart-container">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Student Distribution -->
+        <div class="chart-card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Student Distribution</div>
+                    <div class="card-subtitle">By department</div>
+                </div>
+                <i class="fa-solid fa-users-viewfinder card-icon"></i>
+            </div>
+            <div class="chart-container chart-container-dept">
+                <canvas id="deptChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-grid">
+        <!-- Grade Distribution -->
+        <div class="chart-card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Grade Distribution</div>
+                    <div class="card-subtitle">Student performance overview</div>
+                </div>
+                <i class="fa-solid fa-medal card-icon"></i>
+            </div>
+            <div class="chart-container">
+                <canvas id="gradeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Recent Activity</div>
+                    <div class="card-subtitle">Latest system updates</div>
+                </div>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-dot dot-blue"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">New student enrolled</div>
+                        <div class="activity-meta">CSE • 2 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot dot-green"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">Exam results published</div>
+                        <div class="activity-meta">ECE • 5 hours ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot dot-purple"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">Faculty meeting scheduled</div>
+                        <div class="activity-meta">ME • 1 day ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot dot-orange"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">Fee payment received</div>
+                        <div class="activity-meta">EE • 1 day ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot dot-teal"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">New course added</div>
+                        <div class="activity-meta">CSE • 2 days ago</div>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot dot-pink"></div>
+                    <div class="activity-content">
+                        <div class="activity-text">Attendance updated</div>
+                        <div class="activity-meta">Civil • 2 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+        <div class="summary-card green">
+            <div class="summary-header">Academic Performance</div>
+            <div class="summary-title">Excellent</div>
+            <div class="summary-desc">Overall student performance is above target</div>
+        </div>
+        <div class="summary-card blue">
+            <div class="summary-header">Attendance Rate</div>
+            <div class="summary-title">Very Good</div>
+            <div class="summary-desc">Average attendance is 92.1%</div>
+        </div>
+        <div class="summary-card purple">
+            <div class="summary-header">Faculty Efficiency</div>
+            <div class="summary-title">High</div>
+            <div class="summary-desc">All departments meeting KPIs</div>
+        </div>
+    </div>
+
+    <!-- Floating Chat -->
+    <div class="chat-btn-container">
+        <div class="chat-btn">
+            <i class="fa-regular fa-comment-dots"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <div class="help-btn">
+            <i class="fa-solid fa-question"></i>
+        </div>
+    </div>
+
+    <script>
+        // Attendance Chart
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(attendanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Students',
+                    data: [95, 92, 94, 96, 95, 98],
+                    borderColor: '#00a99d',
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#00a99d',
+                    pointRadius: 4
+                }, {
+                    label: 'Teachers',
+                    data: [98, 96, 97, 98, 97, 99],
+                    borderColor: '#a855f7',
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#a855f7',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true } }
+                },
+                scales: {
+                    y: { beginAtZero: true, max: 100, grid: { borderDash: [2, 4] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Department Chart
+        const deptCtx = document.getElementById('deptChart').getContext('2d');
+        new Chart(deptCtx, {
+            type: 'pie',
+            data: {
+                labels: ['CSE', 'ECE', 'ME', 'EE', 'Civil'],
+                datasets: [{
+                    data: [450, 380, 320, 290, 260],
+                    backgroundColor: ['#00a99d', '#a855f7', '#f97316', '#3b82f6', '#ec4899'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { usePointStyle: true, font: { size: 11 } } }
+                }
+            }
+        });
+
+        // Grade Chart
+        const gradeCtx = document.getElementById('gradeChart').getContext('2d');
+        new Chart(gradeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['A+', 'A', 'B+', 'B', 'C'],
+                datasets: [{
+                    label: 'Students',
+                    data: [450, 680, 520, 380, 180],
+                    backgroundColor: '#00a99d',
+                    borderRadius: 4,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [2, 4] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+
+    </div>
+    </div>
+</div>
+
+<!-- Mobile Sidebar -->
+<div id="mobileSidebar" class="fixed inset-0 z-40 -translate-x-full transition-transform duration-300 md:hidden">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
+    <!-- Sidebar Panel -->
+    <div class="absolute left-0 top-0 h-full w-64 bg-white shadow-lg flex flex-col">
+        <!-- Sidebar Header -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+                    <div>
+                        <h1 class="font-bold text-gray-800">Admin Portal</h1>
+                        <p class="text-xs text-gray-500">Management</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg" title="Close Sidebar">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+            <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-user-graduate text-lg"></i>
+                <span>Students</span>
+            </a>
+            <a href="adminteacher.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                <span>Teachers</span>
+            </a>
+            <a href="admincourses.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-book text-lg"></i>
+                <span>Courses</span>
+            </a>
+            <a href="adminanalytics.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+                <i class="fa-solid fa-chart-bar text-lg"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="adminsetting.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-gear text-lg"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('mobileSidebar');
+        sidebar.classList.toggle('-translate-x-full');
+    }
+    
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers Management</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Gradients */
+            --purple-gradient: linear-gradient(135deg, #a855f7, #9333ea);
+            --blue-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+            --green-gradient: linear-gradient(135deg, #22c55e, #16a34a);
+            --orange-gradient: linear-gradient(135deg, #f97316, #ea580c);
+            
+            /* Badge & Icon Colors */
+            --badge-purple-bg: #f3e8ff; --badge-purple-text: #9333ea;
+            
+            /* Action Button Colors */
+            --btn-view-bg: #dbeafe; --btn-view-text: #1e40af;
+            --btn-edit-bg: #dcfce7; --btn-edit-text: #16a34a;
+            --btn-delete-bg: #fee2e2; --btn-delete-text: #dc2626;
+            
+            /* Avatar Gradients */
+            --avatar-1: linear-gradient(135deg, #c084fc, #a855f7);
+            --avatar-2: linear-gradient(135deg, #f472b6, #e879f9);
+            --avatar-3: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .header-content p {
+            color: var(--text-grey);
+            font-size: 1rem;
+        }
+
+        .btn-add-teacher {
+            background: var(--purple-gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-add-teacher:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 120px;
+        }
+
+        .stat-card.purple { background: var(--purple-gradient); }
+        .stat-card.blue { background: var(--blue-gradient); }
+        .stat-card.green { background: var(--green-gradient); }
+        .stat-card.orange { background: var(--orange-gradient); }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        /* --- Search Bar --- */
+        .search-container {
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            font-size: 0.95rem;
+            outline: none;
+            background: transparent;
+            color: var(--text-dark);
+        }
+
+        .search-icon {
+            position: absolute;
+            margin-left: 1rem;
+            color: #9ca3af;
+        }
+
+        /* --- Teachers Grid --- */
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .teacher-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+            min-height: 280px;
+        }
+
+        .teacher-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .av-1 { background: var(--avatar-1); }
+        .av-2 { background: var(--avatar-2); }
+        .av-3 { background: var(--avatar-3); }
+
+        .teacher-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .teacher-role {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+        }
+
+        /* Card Details */
+        .details-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-label {
+            color: var(--text-grey);
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .dept-badge {
+            background-color: var(--badge-purple-bg);
+            color: var(--badge-purple-text);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Contact Info */
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-grey);
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .contact-row i {
+            font-size: 0.9rem;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover { opacity: 0.9; }
+
+        .btn-view { background-color: var(--btn-view-bg); color: var(--btn-view-text); }
+        .btn-edit { background-color: var(--btn-edit-bg); color: var(--btn-edit-text); }
+        
+        .btn-delete {
+            background-color: var(--btn-delete-bg);
+            color: var(--btn-delete-text);
+            flex: 0 0 40px; /* Square button */
+            padding: 0;
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1200px) {
+            .teachers-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .teachers-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-add-teacher { width: 100%; justify-content: center; }
+        }
+        .bg-primary { background-color: #0ea5e9; }
+        .text-primary { color: #0ea5e9; }
+        .bg-body { background-color: #f8f9fa; }
+        .active-nav-link { background-color: #e0f2fe; color: #0369a1; }
+        .nav-link:hover { background-color: #f3f4f6; }
+        .help-btn { width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .glass-effect { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+<!-- Desktop Sidebar -->
+<div class="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white shadow-lg flex-col">
+    <!-- Sidebar Header -->
+    <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+            <div>
+                <h1 class="font-bold text-gray-800">Admin Portal</h1>
+                <p class="text-xs text-gray-500">Management</p>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+        <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-user-graduate text-lg"></i>
+            <span>Students</span>
+        </a>
+        <a href="adminteacher.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+            <span>Teachers</span>
+        </a>
+        <a href="admincourses.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-book text-lg"></i>
+            <span>Courses</span>
+        </a>
+        <a href="adminanalytics.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-bar text-lg"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="adminsetting.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+</div>
+
+<!-- Main Content Wrapper -->
+<div class="md:ml-64 flex flex-col h-screen">
+    <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-0 md:px-0 z-20 flex-shrink-0 sticky top-0">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Spacer -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" onclick="toggleDarkMode()" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </header>
+    <!-- Scrollable Content -->
+    <div id="dashboard-content" class="flex-1 overflow-y-auto custom-scrollbar p-6">
+
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Teachers Management</h1>
+            <p>Manage faculty members and their assignments</p>
+        </div>
+        <button class="btn-add-teacher" onclick="alert('Add Teacher Modal')">
+            <i class="fa-solid fa-plus"></i> Add Teacher
+        </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card purple">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Total Teachers</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Professors</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-value">14</div>
+            <div class="stat-label">Active Courses</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-value">550</div>
+            <div class="stat-label">Total Students</div>
+        </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search teachers by name, ID, or department...">
+    </div>
+
+    <!-- Teachers Grid -->
+    <div class="teachers-grid">
+        
+        <!-- Teacher 1 -->
+        <div class="teacher-card">
+            <div class="card-header">
+                <div class="avatar av-1">DPS</div>
+                <div class="teacher-info">
+                    <h3>Dr. Priya Sharma</h3>
+                    <div class="teacher-role">Professor</div>
+                </div>
+            </div>
+            <div class="details-list">
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="dept-badge">CSE</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Faculty ID:</span>
+                    <span class="detail-value">TCH001</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subjects:</span>
+                    <span class="detail-value">3 Courses</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Students:</span>
+                    <span class="detail-value">120</span>
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-row"><i class="fa-regular fa-envelope"></i> priya.sharma@ecb.ac.in</div>
+                <div class="contact-row"><i class="fa-solid fa-phone"></i> +91 9876543210</div>
+            </div>
+            <div class="actions">
+                <button class="btn-action btn-view"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-edit"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                <button class="btn-action btn-delete" title="Delete Teacher"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Teacher 2 -->
+        <div class="teacher-card">
+            <div class="card-header">
+                <div class="avatar av-2">PRK</div>
+                <div class="teacher-info">
+                    <h3>Prof. Rajesh Kumar</h3>
+                    <div class="teacher-role">Associate Professor</div>
+                </div>
+            </div>
+            <div class="details-list">
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="dept-badge">ECE</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Faculty ID:</span>
+                    <span class="detail-value">TCH002</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subjects:</span>
+                    <span class="detail-value">2 Courses</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Students:</span>
+                    <span class="detail-value">80</span>
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-row"><i class="fa-regular fa-envelope"></i> rajesh.kumar@ecb.ac.in</div>
+                <div class="contact-row"><i class="fa-solid fa-phone"></i> +91 9876543211</div>
+            </div>
+            <div class="actions">
+                <button class="btn-action btn-view"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-edit"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                <button class="btn-action btn-delete" title="Delete Teacher"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Teacher 3 -->
+        <div class="teacher-card">
+            <div class="card-header">
+                <div class="avatar av-3">DAD</div>
+                <div class="teacher-info">
+                    <h3>Dr. Anita Desai</h3>
+                    <div class="teacher-role">Professor</div>
+                </div>
+            </div>
+            <div class="details-list">
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="dept-badge">ME</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Faculty ID:</span>
+                    <span class="detail-value">TCH003</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subjects:</span>
+                    <span class="detail-value">4 Courses</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Students:</span>
+                    <span class="detail-value">150</span>
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-row"><i class="fa-regular fa-envelope"></i> anita.desai@ecb.ac.in</div>
+                <div class="contact-row"><i class="fa-solid fa-phone"></i> +91 9876543212</div>
+            </div>
+            <div class="actions">
+                <button class="btn-action btn-view"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-edit"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                <button class="btn-action btn-delete" title="Delete Teacher"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Teacher 4 -->
+        <div class="teacher-card">
+            <div class="card-header">
+                <div class="avatar av-2">MVS</div>
+                <div class="teacher-info">
+                    <h3>Mr. Vikram Singh</h3>
+                    <div class="teacher-role">Assistant Professor</div>
+                </div>
+            </div>
+            <div class="details-list">
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="dept-badge">CSE</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Faculty ID:</span>
+                    <span class="detail-value">TCH004</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subjects:</span>
+                    <span class="detail-value">2 Courses</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Students:</span>
+                    <span class="detail-value">90</span>
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-row"><i class="fa-regular fa-envelope"></i> vikram.singh@ecb.ac.in</div>
+                <div class="contact-row"><i class="fa-solid fa-phone"></i> +91 9876543213</div>
+            </div>
+            <div class="actions">
+                <button class="btn-action btn-view"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-edit"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                <button class="btn-action btn-delete" title="Delete Teacher"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Teacher 5 -->
+        <div class="teacher-card">
+            <div class="card-header">
+                <div class="avatar av-1">DMP</div>
+                <div class="teacher-info">
+                    <h3>Dr. Meera Patel</h3>
+                    <div class="teacher-role">Professor</div>
+                </div>
+            </div>
+            <div class="details-list">
+                <div class="detail-row">
+                    <span class="detail-label">Department:</span>
+                    <span class="dept-badge">EE</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Faculty ID:</span>
+                    <span class="detail-value">TCH005</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Subjects:</span>
+                    <span class="detail-value">3 Courses</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Students:</span>
+                    <span class="detail-value">110</span>
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-row"><i class="fa-regular fa-envelope"></i> meera.patel@ecb.ac.in</div>
+                <div class="contact-row"><i class="fa-solid fa-phone"></i> +91 9876543214</div>
+            </div>
+            <div class="actions">
+                <button class="btn-action btn-view"><i class="fa-regular fa-eye"></i> View</button>
+                <button class="btn-action btn-edit"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                <button class="btn-action btn-delete" title="Delete Teacher"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+    </div>
+</div>
+
+<!-- Mobile Sidebar -->
+<div id="mobileSidebar" class="fixed inset-0 z-40 -translate-x-full transition-transform duration-300 md:hidden">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
+    <!-- Sidebar Panel -->
+    <div class="absolute left-0 top-0 h-full w-64 bg-white shadow-lg flex flex-col">
+        <!-- Sidebar Header -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+                    <div>
+                        <h1 class="font-bold text-gray-800">Admin Portal</h1>
+                        <p class="text-xs text-gray-500">Management</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg" title="Close Sidebar">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+            <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-user-graduate text-lg"></i>
+                <span>Students</span>
+            </a>
+            <a href="adminteacher.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+                <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                <span>Teachers</span>
+            </a>
+            <a href="admincourses.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-book text-lg"></i>
+                <span>Courses</span>
+            </a>
+            <a href="adminanalytics.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-bar text-lg"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="adminsetting.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-gear text-lg"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script>
+    // Initialize sidebar state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        
+        // Ensure sidebar is closed and overlay is hidden on page load
+        if (sidebar) {
+            sidebar.classList.add('-translate-x-full');
+        }
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+    });
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('mobileSidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        sidebar.classList.toggle('-translate-x-full');
+        if (overlay) {
+            overlay.classList.toggle('hidden');
+        }
+    }
+    
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+    }
+</script>
+
+</body>
+</html>

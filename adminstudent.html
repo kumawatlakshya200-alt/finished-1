@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Management</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            --blue-primary: #3b82f6;
+            --blue-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+            --green-primary: #22c55e;
+            --green-gradient: linear-gradient(135deg, #22c55e, #4ade80);
+            --purple-primary: #a855f7;
+            --purple-gradient: linear-gradient(135deg, #a855f7, #c084fc);
+            --orange-primary: #f97316;
+            --orange-gradient: linear-gradient(135deg, #f97316, #fb923c);
+            --teal-bg: #ccfbf1;
+            --teal-text: #0f766e;
+            --blue-bg: #dbeafe;
+            --blue-text: #1e40af;
+            --yellow-bg: #fef9c3;
+            --yellow-text: #854d0e;
+            --btn-import-bg: #dbeafe;
+            --btn-import-text: #1e40af;
+            --btn-export-bg: #dcfce7;
+            --btn-export-text: #16a34a;
+            --btn-add-bg: #00a99d;
+            --btn-add-text: #ffffff;
+            --icon-view: #3b82f6;
+            --icon-edit: #10b981;
+            --icon-delete: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 0;
+        }
+
+        /* Full page layout */
+        .flex.h-screen {
+            height: 100vh;
+            width: 100vw;
+        }
+
+        main {
+            width: calc(100% - 256px);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                width: 100%;
+            }
+        }
+
+        /* Fixed header height */
+        header {
+            min-height: 80px;
+            flex-shrink: 0;
+        }
+
+        /* Fixed sidebar */
+        aside {
+            width: 256px;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        /* Scrollable content */
+        #dashboard-content {
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 120px;
+        }
+
+        .stat-card.blue { background: var(--blue-gradient); }
+        .stat-card.green { background: var(--green-gradient); }
+        .stat-card.purple { background: var(--purple-gradient); }
+        .stat-card.orange { background: var(--orange-gradient); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-section {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+
+        .search-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--blue-primary);
+        }
+
+        .dropdown-select {
+            padding: 0.8rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            background-color: white;
+            outline: none;
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .btn-filter {
+            background-color: #ccfbf1;
+            color: #0f766e;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-import { background-color: var(--btn-import-bg); color: var(--btn-import-text); }
+        .btn-export { background-color: var(--btn-export-bg); color: var(--btn-export-text); }
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            overflow-x: auto;
+        }
+
+        .student-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .student-table th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.9rem;
+        }
+
+        .student-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            min-height: 60px;
+        }
+
+        .student-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .student-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .student-name {
+            font-weight: 500;
+            margin-bottom: 0.1rem;
+        }
+
+        .student-email {
+            font-size: 0.8rem;
+            color: var(--text-grey);
+        }
+
+        .dept-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-cse, .badge-ece, .badge-me, .badge-ee {
+            background-color: var(--teal-bg);
+            color: var(--teal-text);
+        }
+
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 160px;
+        }
+
+        .progress-bar-bg {
+            flex-grow: 1;
+            height: 6px;
+            background-color: #f3f4f6;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .fill-green { background-color: #22c55e; }
+        .fill-yellow { background-color: #eab308; }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            width: 35px;
+            text-align: right;
+        }
+
+        .cgpa-badge {
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .cgpa-blue { background-color: var(--blue-bg); color: var(--blue-text); }
+        .cgpa-green { background-color: var(--btn-export-bg); color: var(--btn-export-text); }
+        .cgpa-yellow { background-color: var(--yellow-bg); color: var(--yellow-text); }
+
+        .action-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover { transform: scale(1.1); }
+
+        .btn-view-icon { color: var(--icon-view); }
+        .btn-edit-icon { color: var(--icon-edit); }
+        .btn-delete-icon { color: var(--icon-delete); }
+
+        .progress-fill-90 { width: 90%; }
+        .progress-fill-92 { width: 92%; }
+        .progress-fill-93 { width: 93%; }
+        .progress-fill-95 { width: 95%; }
+        .progress-fill-85 { width: 85%; }
+        .progress-fill-88 { width: 88%; }
+
+        .bg-primary { background-color: #0ea5e9; }
+        .text-primary { color: #0ea5e9; }
+        .bg-body { background-color: #f8f9fa; }
+        .active-nav-link { background-color: #e0f2fe; color: #0369a1; }
+        .nav-link:hover { background-color: #f3f4f6; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .glass-effect { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+            .search-row { flex-direction: column; }
+            .dropdown-select, .btn-filter { width: 100%; }
+            .action-buttons { width: 100%; justify-content: space-between; }
+            .btn-action { flex: 1; justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .student-table { min-width: 800px; }
+        }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+    <div class="flex h-screen w-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg hidden md:flex flex-col h-full z-10 border-r border-gray-100 flex-shrink-0">
+            <!-- Brand -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    E
+                </div>
+                <div>
+                    <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                    <p class="text-xs text-gray-500">Admin Portal</p>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2 custom-scrollbar">
+                
+                <a href="admin.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-border-all w-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+
+                <a href="adminstudent.html" 
+                class="flex items-center gap-4 px-4 py-3 active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50">
+                    <i class="fa-solid fa-graduation-cap w-5"></i>
+                    <span class="font-medium">Students</span>
+                </a>
+
+                <a href="adminteacher.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-chalkboard-user w-5"></i>
+                    <span>Teachers</span>
+                </a>
+
+                <a href="admincourses.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-book-open w-5"></i>
+                    <span>Courses</span>
+                </a>
+
+                <a href="adminanalytics.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a href="adminsetting.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-gear w-5"></i>
+                    <span>Settings</span>
+                </a>
+
+            </nav>
+
+            <!-- Logout -->
+            <div class="p-6 border-t border-gray-100">
+                <a href="../Login Page/index.html" class="flex items-center gap-4 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden">
+            
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-20 flex-shrink-0">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Spacer -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" onclick="toggleDarkMode()" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-10 custom-scrollbar" id="dashboard-content">
+                
+                <!-- Page Title Area -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Students Management</h1>
+                    <p class="text-gray-500 mt-1">Manage all student records and information</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card blue">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-value">91%</div>
+                        <div class="stat-label">Avg Attendance</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-value">8.5</div>
+                        <div class="stat-label">Avg CGPA</div>
+                    </div>
+                </div>
+
+                <!-- Filter & Search Section -->
+                <div class="filter-section">
+                    <div class="search-row">
+                        <div class="search-container">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" class="search-input" placeholder="Search by name or ID...">
+                        </div>
+                        <select class="dropdown-select" title="Filter by Department">
+                            <option>All Departments</option>
+                            <option>CSE</option>
+                            <option>ECE</option>
+                            <option>ME</option>
+                            <option>Civil</option>
+                        </select>
+                        <button class="btn-filter" title="More Filters">
+                            <i class="fa-solid fa-filter"></i> More Filters
+                        </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-import" title="Import CSV">
+                            <i class="fa-solid fa-file-import"></i> Import CSV
+                        </button>
+                        <button class="btn-action btn-export" title="Export Data">
+                            <i class="fa-solid fa-file-export"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
+                <div class="table-container">
+                    <table class="student-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Year</th>
+                                <th>Attendance</th>
+                                <th>CGPA</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <!-- Row 1 -->
+                            <tr>
+                                <td>2021CSE001</td>
+                                <td>
+                                    <div class="student-info">
+                                        <span class="student-name">Himanshu Saini</span>
+                                        <span class="student-email">himanshu@ecb.ac.in</span>
+                                    </div>
+                                </td>
+                                <td><span class="dept-badge badge-cse">CSE</span></td>
+                                <td>3rd Year</td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill fill-green progress-fill-92"></div></div>
+                                        <span class="progress-text">92%</span>
+                                    </div>
+                                </td>
+                                <td><span class="cgpa-badge cgpa-blue">8.5</span></td>
+                                <td>
+                                    <div class="action-icons">
+                                        <button class="icon-btn btn-view-icon" title="View"><i class="fa-regular fa-eye"></i></button>
+                                        <button class="icon-btn btn-edit-icon" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="icon-btn btn-delete-icon" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2 -->
+                            <tr>
+                                <td>2021CSE002</td>
+                                <td>
+                                    <div class="student-info">
+                                        <span class="student-name">Priya Sharma</span>
+                                        <span class="student-email">priya@ecb.ac.in</span>
+                                    </div>
+                                </td>
+                                <td><span class="dept-badge badge-cse">CSE</span></td>
+                                <td>3rd Year</td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill fill-green progress-fill-95"></div></div>
+                                        <span class="progress-text">95%</span>
+                                    </div>
+                                </td>
+                                <td><span class="cgpa-badge cgpa-green">9.2</span></td>
+                                <td>
+                                    <div class="action-icons">
+                                        <button class="icon-btn btn-view-icon" title="View"><i class="fa-regular fa-eye"></i></button>
+                                        <button class="icon-btn btn-edit-icon" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="icon-btn btn-delete-icon" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3 -->
+                            <tr>
+                                <td>2021ECE001</td>
+                                <td>
+                                    <div class="student-info">
+                                        <span class="student-name">Rahul Kumar</span>
+                                        <span class="student-email">rahul@ecb.ac.in</span>
+                                    </div>
+                                </td>
+                                <td><span class="dept-badge badge-ece">ECE</span></td>
+                                <td>2nd Year</td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill fill-yellow progress-fill-88"></div></div>
+                                        <span class="progress-text">88%</span>
+                                    </div>
+                                </td>
+                                <td><span class="cgpa-badge cgpa-yellow">7.8</span></td>
+                                <td>
+                                    <div class="action-icons">
+                                        <button class="icon-btn btn-view-icon" title="View"><i class="fa-regular fa-eye"></i></button>
+                                        <button class="icon-btn btn-edit-icon" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="icon-btn btn-delete-icon" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 4 -->
+                            <tr>
+                                <td>2021ME001</td>
+                                <td>
+                                    <div class="student-info">
+                                        <span class="student-name">Anjali Verma</span>
+                                        <span class="student-email">anjali@ecb.ac.in</span>
+                                    </div>
+                                </td>
+                                <td><span class="dept-badge badge-me">ME</span></td>
+                                <td>4th Year</td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill fill-green progress-fill-90"></div></div>
+                                        <span class="progress-text">90%</span>
+                                    </div>
+                                </td>
+                                <td><span class="cgpa-badge cgpa-blue">8.9</span></td>
+                                <td>
+                                    <div class="action-icons">
+                                        <button class="icon-btn btn-view-icon" title="View"><i class="fa-regular fa-eye"></i></button>
+                                        <button class="icon-btn btn-edit-icon" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="icon-btn btn-delete-icon" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 5 -->
+                            <tr>
+                                <td>2021CSE003</td>
+                                <td>
+                                    <div class="student-info">
+                                        <span class="student-name">Amit Singh</span>
+                                        <span class="student-email">amit@ecb.ac.in</span>
+                                    </div>
+                                </td>
+                                <td><span class="dept-badge badge-cse">CSE</span></td>
+                                <td>1st Year</td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill fill-yellow progress-fill-85"></div></div>
+                                        <span class="progress-text">85%</span>
+                                    </div>
+                                </td>
+                                <td><span class="cgpa-badge cgpa-blue">8.1</span></td>
+                                <td>
+                                    <div class="action-icons">
+                                        <button class="icon-btn btn-view-icon" title="View"><i class="fa-regular fa-eye"></i></button>
+                                        <button class="icon-btn btn-edit-icon" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="icon-btn btn-delete-icon" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 6 -->
+                            <tr>
+                                <td>2021EE001</td>
+                                <td>
+                                    <div class="student-info">
+                                        <span class="student-name">Sneha Patel</span>
+                                        <span class="student-email">sneha@ecb.ac.in</span>
+                                    </div>
+                                </td>
+                                <td><span class="dept-badge badge-ee">EE</span></td>
+                                <td>3rd Year</td>
+                                <td>
+                                    <div class="progress-wrapper">
+                                        <div class="progress-bar-bg"><div class="progress-bar-fill fill-green progress-fill-93"></div></div>
+                                        <span class="progress-text">93%</span>
+                                    </div>
+                                </td>
+                                <td><span class="cgpa-badge cgpa-blue">8.7</span></td>
+                                <td>
+                                    <div class="action-icons">
+                                        <button class="icon-btn btn-view-icon" title="View"><i class="fa-regular fa-eye"></i></button>
+                                        <button class="icon-btn btn-edit-icon" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                                        <button class="icon-btn btn-delete-icon" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden glass-effect"></div>
+
+        <!-- Mobile Sidebar -->
+        <aside id="mobileSidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 md:hidden flex flex-col h-full border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">E</div>
+                    <div>
+                        <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                        <p class="text-xs text-gray-500">Admin Portal</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-500" title="Close sidebar"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+                <a href="admin.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-border-all w-5"></i>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a href="adminstudent.html" class="flex items-center gap-4 px-4 py-3 bg-primary text-white shadow-md rounded-xl transition-all">
+                    <i class="fa-solid fa-graduation-cap w-5"></i>
+                    <span class="font-medium">Students</span>
+                </a>
+                <a href="adminteacher.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-chalkboard-user w-5"></i>
+                    <span class="font-medium">Teachers</span>
+                </a>
+                <a href="admincourses.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-book-open w-5"></i>
+                    <span class="font-medium">Courses</span>
+                </a>
+                <a href="adminanalytics.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span class="font-medium">Analytics</span>
+                </a>
+                <a href="adminsetting.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-gear w-5"></i>
+                    <span class="font-medium">Settings</span>
+                </a>
+                <a href="../Login Page/index.html" class="flex items-center gap-4 px-4 py-3 text-red-500 rounded-xl transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span class="text-red-500">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+    </div>
+
+    <script>
+        // Initialize sidebar state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            // Ensure sidebar is closed and overlay is hidden on page load
+            if (sidebar) {
+                sidebar.classList.add('-translate-x-full');
+            }
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+
+</body>
+</html>

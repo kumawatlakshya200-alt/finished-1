@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIDYA-CUE Admin Portal</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+ <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+Custom Colors -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            primary: '#0ea5e9', /* Sky blue for Admin brand */
+            'primary-dark': '#0284c7',
+            secondary: '#00a99d',
+            sidebar: '#ffffff',
+            body: '#f9fafb',
+
+            /* Dashboard Specific Colors */
+            'dash-teal': '#00a99d',
+            'dash-purple': '#a855f7',
+            'dash-blue': '#2563eb',
+            'dash-green': '#16a34a',
+            'dash-orange': '#f97316',
+            'dash-pink': '#ec4899',
+
+            'action-blue': '#e0f2fe',
+            'action-text': '#0284c7',
+            'ai-purple': '#7c3aed',
+            'ai-bg': '#f3e8ff',
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9ca3af;
+    }
+
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.95);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Sidebar Active State Gradient */
+    .active-nav-link {
+      background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(14, 165, 233, 0.4);
+    }
+
+    .nav-link:hover:not(.active-nav-link) {
+      color: #0ea5e9;
+      background-color: #f0f9ff;
+    }
+
+    /* Markdown Styles for AI Output */
+    .ai-content h1 {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      color: #1f2937;
+    }
+
+    .ai-content h2 {
+      font-size: 1.25em;
+      font-weight: bold;
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+      color: #374151;
+    }
+
+    .ai-content p {
+      margin-bottom: 0.75em;
+      line-height: 1.6;
+    }
+
+    .ai-content ul {
+      list-style-type: disc;
+      padding-left: 1.5em;
+      margin-bottom: 0.75em;
+    }
+
+    .ai-content li {
+      margin-bottom: 0.25em;
+    }
+
+    .ai-content strong {
+      color: #7c3aed;
+    }
+  </style>
+</head>
+
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-lg hidden md:flex flex-col h-full z-10 border-r border-gray-100">
+      <!-- Brand -->
+      <div class="p-6 flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+          E
+        </div>
+        <div>
+          <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+          <p class="text-xs text-gray-500">Admin Portal</p>
+        </div>
+      </div>
+
+      <!-- Menu -->
+      <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2 custom-scrollbar">
+
+        <a href="admin.html"
+          class="flex items-center gap-4 px-4 py-3 active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50">
+          <i class="fa-solid fa-border-all w-5"></i>
+          <span class="font-medium">Dashboard</span>
+        </a>
+
+        <a href="adminstudent.html"
+          class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+          <i class="fa-solid fa-graduation-cap w-5"></i>
+          <span class="font-medium">Students</span>
+        </a>
+
+        <a href="adminteacher.html"
+          class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+          <i class="fa-solid fa-chalkboard-user w-5"></i>
+          <span>Teachers</span>
+        </a>
+
+        <a href="admincourses.html"
+          class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+          <i class="fa-solid fa-book-open w-5"></i>
+          <span>Courses</span>
+        </a>
+
+        <a href="adminanalytics.html"
+          class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+          <i class="fa-solid fa-chart-simple w-5"></i>
+          <span>Analytics</span>
+        </a>
+
+        <a href="adminsetting.html"
+          class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+          <i class="fa-solid fa-gear w-5"></i>
+          <span>Settings</span>
+        </a>
+
+      </nav>
+
+      <!-- Logout -->
+      <div class="p-6 border-t border-gray-100">
+        <a href="../Login Page/index.html"
+          class="flex items-center gap-4 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+          <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+          <span class="font-medium">Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+
+      <!-- Header -->
+      <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-20">
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Spacer -->
+        <div class="hidden md:block"></div>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-6 ml-auto">
+          <button class="text-gray-500 hover:text-primary transition-colors" title="Toggle theme">
+            <i class="fa-regular fa-moon text-xl"></i>
+          </button>
+          <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+            <i class="fa-regular fa-bell text-xl"></i>
+            <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+          </button>
+
+          <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+            <div class="text-right hidden sm:block leading-tight">
+              <p class="text-sm font-semibold text-gray-800">Admin User</p>
+              <p class="text-xs text-gray-500">Administrator</p>
+            </div>
+            <div
+              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+              A
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Content -->
+      <div class="flex-1 overflow-y-auto p-4 md:p-10 pb-20 custom-scrollbar" id="dashboard-content">
+
+        <!-- Page Title Area -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+          <p class="text-gray-500 mt-1">Welcome back! Here's what's happening today</p>
+        </div>
+
+        <!-- Top Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+          <!-- Card 1: Students -->
+          <div
+            class="bg-dash-teal text-white rounded-2xl p-6 shadow-lg shadow-teal-200 relative overflow-hidden stats-card"
+            data-label="Total Students" data-value="5,234" data-trend="+12%">
+            <div class="relative z-10 flex flex-col h-full justify-between h-[160px]">
+              <i class="fa-solid fa-graduation-cap text-3xl mb-4 opacity-80"></i>
+              <div>
+                <h3 class="text-4xl font-bold mb-1">5,234</h3>
+                <p class="text-teal-100 text-sm font-medium">Total Students</p>
+              </div>
+              <div class="absolute top-6 right-0 bg-white/20 px-2 py-1 rounded text-xs font-bold">+12%</div>
+            </div>
+            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+          </div>
+
+          <!-- Card 2: Teachers -->
+          <div
+            class="bg-dash-purple text-white rounded-2xl p-6 shadow-lg shadow-purple-200 relative overflow-hidden stats-card"
+            data-label="Total Teachers" data-value="287" data-trend="+8%">
+            <div class="relative z-10 flex flex-col h-full justify-between h-[160px]">
+              <i class="fa-solid fa-users text-3xl mb-4 opacity-80"></i>
+              <div>
+                <h3 class="text-4xl font-bold mb-1">287</h3>
+                <p class="text-purple-100 text-sm font-medium">Total Teachers</p>
+              </div>
+              <div class="absolute top-6 right-0 bg-white/20 px-2 py-1 rounded text-xs font-bold">+8%</div>
+            </div>
+            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+          </div>
+
+          <!-- Card 3: Active Courses -->
+          <div
+            class="bg-dash-blue text-white rounded-2xl p-6 shadow-lg shadow-blue-200 relative overflow-hidden stats-card"
+            data-label="Active Courses" data-value="156" data-trend="+5%">
+            <div class="relative z-10 flex flex-col h-full justify-between h-[160px]">
+              <i class="fa-solid fa-book-open text-3xl mb-4 opacity-80"></i>
+              <div>
+                <h3 class="text-4xl font-bold mb-1">156</h3>
+                <p class="text-blue-100 text-sm font-medium">Active Courses</p>
+              </div>
+              <div class="absolute top-6 right-0 bg-white/20 px-2 py-1 rounded text-xs font-bold">+5%</div>
+            </div>
+            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+          </div>
+
+          <!-- Card 4: Revenue -->
+          <div
+            class="bg-dash-green text-white rounded-2xl p-6 shadow-lg shadow-green-200 relative overflow-hidden stats-card"
+            data-label="Revenue" data-value="₹42.5L" data-trend="+18%">
+            <div class="relative z-10 flex flex-col h-full justify-between h-[160px]">
+              <i class="fa-solid fa-dollar-sign text-3xl mb-4 opacity-80"></i>
+              <div>
+                <h3 class="text-4xl font-bold mb-1">₹42.5L</h3>
+                <p class="text-green-100 text-sm font-medium">Revenue</p>
+              </div>
+              <div class="absolute top-6 right-0 bg-white/20 px-2 py-1 rounded text-xs font-bold">+18%</div>
+            </div>
+            <div class="absolute -bottom-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
+          </div>
+
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 mb-10">
+          <h2 class="text-lg font-semibold text-gray-700 mb-6 flex items-center gap-2">
+            Quick Actions
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- AI Feature Button -->
+            <button onclick="openAIModal('summary')"
+              class="col-span-1 md:col-span-2 lg:col-span-1 bg-gradient-to-r from-violet-600 to-indigo-600 text-white py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-indigo-200 transition-all flex items-center justify-center gap-2 border border-transparent">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              ✨ Generate Executive Briefing
+            </button>
+
+            <button
+              class="bg-action-blue text-action-text py-4 rounded-xl font-medium hover:bg-sky-200 transition-colors">
+              Add New Student
+            </button>
+            <button
+              class="bg-action-blue text-action-text py-4 rounded-xl font-medium hover:bg-sky-200 transition-colors">
+              Add New Teacher
+            </button>
+            <button
+              class="bg-action-blue text-action-text py-4 rounded-xl font-medium hover:bg-sky-200 transition-colors">
+              Create Course
+            </button>
+            <button
+              class="bg-action-blue text-action-text py-4 rounded-xl font-medium hover:bg-sky-200 transition-colors">
+              Generate Reports
+            </button>
+            <button
+              class="bg-action-blue text-action-text py-4 rounded-xl font-medium hover:bg-sky-200 transition-colors">
+              View Analytics
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activities & Tasks -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+
+          <!-- Recent Activities -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-semibold text-gray-700">Recent Activities</h2>
+              <a href="#" class="text-sm text-primary font-medium hover:underline">View All</a>
+            </div>
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <div class="mt-1.5 w-2 h-2 rounded-full bg-blue-500 flex-shrink-0"></div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">New student admission - Rahul Sharma (CSE)</p>
+                  <p class="text-xs text-gray-400 mt-1">5 min ago</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="mt-1.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0"></div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">New course added - Advanced AI</p>
+                  <p class="text-xs text-gray-400 mt-1">5 hours ago</p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <div class="mt-1.5 w-2 h-2 rounded-full bg-purple-500 flex-shrink-0"></div>
+                <div>
+                  <p class="text-sm font-medium text-gray-800">Faculty meeting scheduled</p>
+                  <p class="text-xs text-gray-400 mt-1">1 day ago</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pending Tasks -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+              <h2 class="text-lg font-semibold text-gray-700">Pending Tasks</h2>
+              <span class="bg-red-100 text-red-500 text-xs font-bold px-2 py-1 rounded-md">8 Tasks</span>
+            </div>
+            <div class="space-y-4">
+              <!-- Task 1 -->
+              <div
+                class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:shadow-sm transition-shadow group">
+                <div>
+                  <p class="text-sm font-medium text-gray-800">Review pending student applications</p>
+                  <p class="text-xs text-gray-400 mt-1">Admissions • <span class="text-red-500 font-bold">High</span>
+                  </p>
+                </div>
+                <button
+                  onclick="openAIModal('task', 'Draft an email to the admissions team urging them to expedite the review of pending student applications.')"
+                  class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"
+                  title="Draft AI Response">
+                  <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                </button>
+              </div>
+
+              <!-- Task 2 -->
+              <div
+                class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:shadow-sm transition-shadow group">
+                <div>
+                  <p class="text-sm font-medium text-gray-800">Process fee refund requests</p>
+                  <p class="text-xs text-gray-400 mt-1">Accounts • <span class="text-yellow-600 font-bold">Medium</span>
+                  </p>
+                </div>
+                <button
+                  onclick="openAIModal('task', 'Create a checklist for processing fee refund requests for the accounts department.')"
+                  class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"
+                  title="Draft AI Response">
+                  <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                </button>
+              </div>
+
+              <!-- Task 3 -->
+              <div
+                class="border border-gray-100 rounded-xl p-4 flex justify-between items-center hover:shadow-sm transition-shadow group">
+                <div>
+                  <p class="text-sm font-medium text-gray-800">Review faculty performance reports</p>
+                  <p class="text-xs text-gray-400 mt-1">Administration • <span
+                      class="text-green-600 font-bold">Low</span></p>
+                </div>
+                <button
+                  onclick="openAIModal('task', 'Draft a memo to faculty members announcing the upcoming performance review schedule.')"
+                  class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center hover:bg-indigo-600 hover:text-white transition-colors"
+                  title="Draft AI Response">
+                  <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Department Performance -->
+        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 mb-10">
+          <h2 class="text-lg font-semibold text-gray-700 mb-6">Department Performance</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4" id="dept-stats">
+
+            <!-- CSE -->
+            <div class="bg-dash-teal text-white rounded-xl p-5 shadow-md dept-card h-[140px] flex flex-col" data-dept="CSE"
+              data-students="450" data-attendance="92%" data-cgpa="8.5">
+              <h3 class="text-2xl font-bold mb-3">CSE</h3>
+              <div class="space-y-1 text-sm opacity-90 flex-1">
+                <div class="flex justify-between"><span>Students:</span> <span>450</span></div>
+                <div class="flex justify-between"><span>Attendance:</span> <span>92%</span></div>
+                <div class="flex justify-between"><span>Avg CGPA:</span> <span>8.5</span></div>
+              </div>
+            </div>
+
+            <!-- ECE -->
+            <div class="bg-dash-purple text-white rounded-xl p-5 shadow-md dept-card h-[140px] flex flex-col"
+              data-dept="ECE" data-students="380" data-attendance="88%" data-cgpa="8.2">
+              <h3 class="text-2xl font-bold mb-3">ECE</h3>
+              <div class="space-y-1 text-sm opacity-90 flex-1">
+                <div class="flex justify-between"><span>Students:</span> <span>380</span></div>
+                <div class="flex justify-between"><span>Attendance:</span> <span>88%</span></div>
+                <div class="flex justify-between"><span>Avg CGPA:</span> <span>8.2</span></div>
+              </div>
+            </div>
+
+            <!-- ME -->
+            <div class="bg-dash-orange text-white rounded-xl p-5 shadow-md dept-card h-[140px] flex flex-col"
+              data-dept="ME" data-students="320" data-attendance="90%" data-cgpa="8.3">
+              <h3 class="text-2xl font-bold mb-3">ME</h3>
+              <div class="space-y-1 text-sm opacity-90 flex-1">
+                <div class="flex justify-between"><span>Students:</span> <span>320</span></div>
+                <div class="flex justify-between"><span>Attendance:</span> <span>90%</span></div>
+                <div class="flex justify-between"><span>Avg CGPA:</span> <span>8.3</span></div>
+              </div>
+            </div>
+
+            <!-- EE -->
+            <div class="bg-dash-blue text-white rounded-xl p-5 shadow-md dept-card h-[140px] flex flex-col" data-dept="EE"
+              data-students="290" data-attendance="91%" data-cgpa="8.4">
+              <h3 class="text-2xl font-bold mb-3">EE</h3>
+              <div class="space-y-1 text-sm opacity-90 flex-1">
+                <div class="flex justify-between"><span>Students:</span> <span>290</span></div>
+                <div class="flex justify-between"><span>Attendance:</span> <span>91%</span></div>
+                <div class="flex justify-between"><span>Avg CGPA:</span> <span>8.4</span></div>
+              </div>
+            </div>
+
+            <!-- Civil -->
+            <div class="bg-dash-pink text-white rounded-xl p-5 shadow-md dept-card h-[140px] flex flex-col"
+              data-dept="Civil" data-students="260" data-attendance="87%" data-cgpa="8">
+              <h3 class="text-2xl font-bold mb-3">Civil</h3>
+              <div class="space-y-1 text-sm opacity-90 flex-1">
+                <div class="flex justify-between"><span>Students:</span> <span>260</span></div>
+                <div class="flex justify-between"><span>Attendance:</span> <span>87%</span></div>
+                <div class="flex justify-between"><span>Avg CGPA:</span> <span>8</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Important Alerts -->
+        <div
+          class="bg-red-50 border border-red-100 rounded-2xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500 flex-shrink-0">
+              <i class="fa-solid fa-circle-exclamation"></i>
+            </div>
+            <div>
+              <h3 class="text-red-800 font-semibold mb-2">Important Alerts</h3>
+              <ul class="text-sm text-red-700 space-y-1 list-disc list-inside">
+                <li>15 students with attendance below 75% - Action required</li>
+                <li>Exam schedule finalization pending - Deadline: Tomorrow</li>
+                <li>8 faculty leave requests awaiting approval</li>
+              </ul>
+            </div>
+          </div>
+          <button
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors whitespace-nowrap self-end md:self-center shadow-sm">
+            Review
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Help FAB -->
+      <button
+        class="absolute bottom-4 right-4 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-xs z-30 shadow-lg hover:bg-gray-800 transition-colors">
+        ?
+      </button>
+
+    </main>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()"
+      class="fixed inset-0 bg-black/50 z-30 hidden md:hidden glass-effect"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside id="mobileSidebar"
+      class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 md:hidden flex flex-col h-full border-r border-gray-100">
+      <!-- Brand -->
+      <div class="p-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">E
+          </div>
+          <div>
+            <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+            <p class="text-xs text-gray-500">Admin Portal</p>
+          </div>
+        </div>
+        <button onclick="toggleSidebar()" class="text-gray-500" title="Close sidebar"><i
+            class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <!-- Menu -->
+      <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+        <a href="#" class="flex items-center gap-4 px-4 py-3 bg-primary text-white shadow-md rounded-xl transition-all">
+          <i class="fa-solid fa-border-all w-5"></i>
+          <span class="font-medium">Dashboard</span>
+        </a>
+        <!-- Other links same as desktop... -->
+        <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+          <i class="fa-solid fa-graduation-cap w-5"></i>
+          <span class="font-medium">Students</span>
+        </a>
+        <a href="../Login Page/index.html"
+          class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+          <i class="fa-solid fa-arrow-right-from-bracket w-5 text-red-500"></i>
+          <span class="text-red-500">Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- AI Modal -->
+    <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeAIModal()"></div>
+
+      <!-- Modal Content -->
+      <div
+        class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl m-4 relative flex flex-col max-h-[90vh] overflow-hidden">
+
+        <!-- Header -->
+        <div
+          class="p-6 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-violet-600 to-indigo-600 text-white">
+          <div class="flex items-center gap-3">
+            <div class="bg-white/20 p-2 rounded-lg">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold">Gemini Admin Assistant</h3>
+              <p class="text-xs text-indigo-100" id="aiModalSubtitle">AI-Powered Insights</p>
+            </div>
+          </div>
+          <button onclick="closeAIModal()" class="text-white/80 hover:text-white transition-colors"
+            title="Close AI assistant">
+            <i class="fa-solid fa-xmark text-xl"></i>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 overflow-y-auto custom-scrollbar flex-1 bg-gray-50">
+
+          <!-- Input Area -->
+          <div class="mb-6">
+            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Your Request</label>
+            <textarea id="aiPromptInput"
+              class="w-full border border-gray-300 rounded-xl p-4 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all shadow-sm"
+              rows="3" placeholder="Ask Gemini to analyze data or draft a message..."></textarea>
+          </div>
+
+          <!-- Action Button -->
+          <div class="flex justify-end mb-6">
+            <button onclick="callGemini()" id="generateBtn"
+              class="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition-all shadow-md hover:shadow-lg flex items-center gap-2">
+              <span>Generate Response</span>
+              <i class="fa-solid fa-paper-plane text-xs"></i>
+            </button>
+          </div>
+
+          <!-- Output Area -->
+          <div id="aiResponseArea" class="hidden">
+            <div class="flex items-center gap-2 mb-3">
+              <div
+                class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px]">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <span class="text-sm font-semibold text-gray-700">Gemini Response</span>
+            </div>
+            <div
+              class="bg-white border border-gray-200 rounded-xl p-6 text-sm text-gray-700 shadow-sm ai-content prose prose-sm max-w-none"
+              id="aiOutputContent">
+              <!-- Content will be injected here -->
+            </div>
+            <div class="mt-4 flex gap-3">
+              <button onclick="copyToClipboard()"
+                class="text-xs text-gray-500 hover:text-indigo-600 flex items-center gap-1 transition-colors">
+                <i class="fa-regular fa-copy"></i> Copy Text
+              </button>
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div id="aiLoading" class="hidden py-8 text-center">
+            <div
+              class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-100 border-t-indigo-600 mb-3">
+            </div>
+            <p class="text-sm text-gray-500 animate-pulse">Consulting Gemini...</p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize sidebar state on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.getElementById('mobileSidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      
+      // Ensure sidebar is closed and overlay is hidden on page load
+      if (sidebar) {
+        sidebar.classList.add('-translate-x-full');
+      }
+      if (overlay) {
+        overlay.classList.add('hidden');
+      }
+    });
+
+    // Sidebar Toggle
+    function toggleSidebar() {
+      const sidebar = document.getElementById('mobileSidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+
+      if (sidebar.classList.contains('-translate-x-full')) {
+        sidebar.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+      }
+    }
+
+    // --- Gemini AI Logic ---
+
+    const apiKey = ""; // System will inject key at runtime
+
+    function openAIModal(mode, specificTask = '') {
+      const modal = document.getElementById('aiModal');
+      const promptInput = document.getElementById('aiPromptInput');
+      const subtitle = document.getElementById('aiModalSubtitle');
+      const responseArea = document.getElementById('aiResponseArea');
+      const loading = document.getElementById('aiLoading');
+
+      // Reset state
+      responseArea.classList.add('hidden');
+      loading.classList.add('hidden');
+      modal.classList.remove('hidden');
+
+      if (mode === 'summary') {
+        subtitle.innerText = "Executive Dashboard Analysis";
+        // Scrape current data
+        const context = scrapeDashboardData();
+        promptInput.value = `Based on the following dashboard data, generate a concise Executive Briefing for the School Administrator. 
+                
+Data:
+${JSON.stringify(context, null, 2)}
+
+Please include:
+1. A high-level summary of the school's health.
+2. An analysis of department performance differences.
+3. 3 key actionable recommendations based on the alerts and stats.`;
+      } else if (mode === 'task') {
+        subtitle.innerText = "Task Assistant";
+        promptInput.value = specificTask;
+      }
+    }
+
+    function closeAIModal() {
+      document.getElementById('aiModal').classList.add('hidden');
+    }
+
+    function scrapeDashboardData() {
+      // Helper to get text from stats cards
+      const getStat = (label) => {
+        const el = document.querySelector(`.stats-card[data-label="${label}"]`);
+        return {
+          value: el?.getAttribute('data-value'),
+          trend: el?.getAttribute('data-trend')
+        };
+      };
+
+      // Helper to get dept data
+      const depts = [];
+      document.querySelectorAll('.dept-card').forEach(card => {
+        depts.push({
+          name: card.getAttribute('data-dept'),
+          students: card.getAttribute('data-students'),
+          attendance: card.getAttribute('data-attendance'),
+          cgpa: card.getAttribute('data-cgpa')
+        });
+      });
+
+      // Get alerts text
+      const alerts = Array.from(document.querySelectorAll('ul.list-disc li')).map(li => li.innerText);
+
+      return {
+        stats: {
+          students: getStat("Total Students"),
+          teachers: getStat("Total Teachers"),
+          revenue: getStat("Revenue"),
+          courses: getStat("Active Courses")
+        },
+        departments: depts,
+        activeAlerts: alerts
+      };
+    }
+
+    async function callGemini() {
+      const prompt = document.getElementById('aiPromptInput').value;
+      const responseArea = document.getElementById('aiResponseArea');
+      const outputContent = document.getElementById('aiOutputContent');
+      const loading = document.getElementById('aiLoading');
+      const btn = document.getElementById('generateBtn');
+
+      if (!prompt.trim()) return;
+
+      // UI Loading State
+      responseArea.classList.add('hidden');
+      loading.classList.remove('hidden');
+      btn.disabled = true;
+      btn.classList.add('opacity-50');
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: prompt }]
+            }]
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error.message);
+        }
+
+        const text = data.candidates[0].content.parts[0].text;
+
+        // Simple formatting conversion (markdown to html basics)
+        const formattedText = text
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n\n/g, '<br><br>')
+          .replace(/\n/g, '<br>');
+
+        outputContent.innerHTML = formattedText;
+        responseArea.classList.remove('hidden');
+
+      } catch (error) {
+        alert('Error connecting to Gemini: ' + error.message);
+      } finally {
+        loading.classList.add('hidden');
+        btn.disabled = false;
+        btn.classList.remove('opacity-50');
+      }
+    }
+
+    function copyToClipboard() {
+      const text = document.getElementById('aiOutputContent').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('button[onclick="copyToClipboard()"]');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+        setTimeout(() => btn.innerHTML = originalHTML, 2000);
+      });
+    }
+  </script>
+</body>
+
+</html>

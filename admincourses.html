@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses Management</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Colors */
+            --blue-primary: #3b82f6;
+            --green-primary: #22c55e;
+            --purple-primary: #a855f7;
+            --orange-primary: #f97316;
+            
+            /* Gradients */
+            --blue-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+            --green-gradient: linear-gradient(135deg, #22c55e, #16a34a);
+            --purple-gradient: linear-gradient(135deg, #a855f7, #9333ea);
+            --orange-gradient: linear-gradient(135deg, #f97316, #ea580c);
+            
+            /* Component Colors */
+            --icon-bg-purple: #8b5cf6; /* Deeper purple for course icon bg */
+            --pill-cse-bg: #dbeafe; --pill-cse-text: #1e40af;
+            --pill-ece-bg: #f3e8ff; --pill-ece-text: #7e22ce;
+            --pill-me-bg: #e0f2fe; --pill-me-text: #0369a1;
+            --pill-ee-bg: #dcfce7; --pill-ee-text: #15803d;
+            
+            /* Action Buttons */
+            --btn-view-bg: #dbeafe; --btn-view-text: #2563eb;
+            --btn-edit-bg: #dcfce7; --btn-edit-text: #16a34a;
+            --btn-delete-bg: #fee2e2; --btn-delete-text: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .header-content p {
+            color: var(--text-grey);
+            font-size: 1rem;
+        }
+
+        .btn-add-course {
+            background: var(--purple-gradient); /* As per screenshot add button is purple/blueish */
+            background-color: #6366f1; 
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-add-course:hover {
+            opacity: 0.9;
+        }
+
+        /* --- Stats Grid --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 120px;
+        }
+
+        .stat-card.blue { background: var(--blue-gradient); }
+        .stat-card.green { background: var(--green-gradient); }
+        .stat-card.purple { background: var(--purple-gradient); }
+        .stat-card.orange { background: var(--orange-gradient); }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        /* --- Search Bar --- */
+        .search-container {
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            font-size: 0.95rem;
+            outline: none;
+            background: transparent;
+            color: var(--text-dark);
+        }
+
+        .search-icon {
+            position: absolute;
+            margin-left: 1rem;
+            color: #9ca3af;
+        }
+
+        /* --- Courses Grid --- */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            border-left: 5px solid var(--blue-primary); /* Accent border */
+            transition: transform 0.2s;
+            min-height: 320px;
+        }
+
+        .course-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Card Header */
+        .card-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .course-icon-box {
+            width: 55px;
+            height: 55px;
+            background-color: #8b5cf6; /* Vibrant purple from screenshot */
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .course-info h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .course-code {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+
+        /* Stats Row inside card */
+        .card-stats-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mini-stat {
+            background-color: #f9fafb;
+            padding: 1rem;
+            border-radius: 12px;
+            flex: 1;
+        }
+
+        .mini-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-grey);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 0.3rem;
+        }
+
+        .mini-stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Meta Info */
+        .meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meta-label {
+            color: var(--text-grey);
+        }
+
+        .meta-value {
+            font-weight: 500;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dept-pill {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pill-cse { background-color: var(--pill-cse-bg); color: var(--pill-cse-text); }
+        .pill-ece { background-color: var(--pill-ece-bg); color: var(--pill-ece-text); }
+        .pill-me { background-color: var(--pill-me-bg); color: var(--pill-me-text); }
+        .pill-ee { background-color: var(--pill-ee-bg); color: var(--pill-ee-text); }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: auto;
+        }
+
+        .btn-action {
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:hover { opacity: 0.9; }
+
+        .btn-view { 
+            background-color: var(--btn-view-bg); 
+            color: var(--btn-view-text); 
+            flex-grow: 1;
+            padding: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-icon-only {
+            width: 45px;
+            height: 45px;
+            font-size: 1.1rem;
+        }
+
+        .btn-edit { background-color: var(--btn-edit-bg); color: var(--btn-edit-text); }
+        .btn-delete { background-color: var(--btn-delete-bg); color: var(--btn-delete-text); }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1200px) {
+            .courses-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .btn-add-course { width: 100%; justify-content: center; }
+            .card-stats-row { flex-direction: column; gap: 0.8rem; }
+        }
+
+        .help-btn {
+            width: 35px;
+            height: 35px;
+            background: #1f2937;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .bg-primary { background-color: #0ea5e9; }
+        .text-primary { color: #0ea5e9; }
+        .bg-body { background-color: #f8f9fa; }
+        .active-nav-link { background-color: #e0f2fe; color: #0369a1; }
+        .nav-link:hover { background-color: #f3f4f6; }
+        .help-btn { width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .glass-effect { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+<!-- Desktop Sidebar -->
+<div class="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white shadow-lg flex-col">
+    <!-- Sidebar Header -->
+    <div class="p-6 border-b border-gray-200">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+            <div>
+                <h1 class="font-bold text-gray-800">Admin Portal</h1>
+                <p class="text-xs text-gray-500">Management</p>
+            </div>
+        </div>
+    </div>
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+        <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-user-graduate text-lg"></i>
+            <span>Students</span>
+        </a>
+        <a href="adminteacher.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+            <span>Teachers</span>
+        </a>
+        <a href="admincourses.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+            <i class="fa-solid fa-book text-lg"></i>
+            <span>Courses</span>
+        </a>
+        <a href="adminanalytics.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-bar text-lg"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="adminsetting.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+</div>
+
+<!-- Main Content Wrapper -->
+<div class="md:ml-64 flex flex-col h-screen">
+         <!-- Header -->
+             <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-0 md:px-0 z-20 flex-shrink-0 sticky top-0">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Spacer -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" onclick="toggleDarkMode()" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                            <p class="text-xs text-gray-500">Administrator</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            A
+                        </div>
+                    </div>
+                </div>
+            </header>
+    <!-- Scrollable Content -->
+    <div id="dashboard-content" class="flex-1 overflow-y-auto custom-scrollbar p-6">
+
+    <div class="page-header">
+        <div class="header-content">
+            <h1>Courses Management</h1>
+            <p>Manage all courses and curriculum</p>
+        </div>
+        <button class="btn-add-course" onclick="alert('Add Course Modal')">
+            <i class="fa-solid fa-plus"></i> Add Course
+        </button>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Total Courses</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Active Courses</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-value">156</div>
+            <div class="stat-label">Total Credits</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-value">618</div>
+            <div class="stat-label">Enrolled Students</div>
+        </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search courses by name, code, or department...">
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid">
+        
+        <!-- Card 1 -->
+        <div class="course-card">
+            <div class="card-header">
+                <div class="course-icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <div class="course-info">
+                    <h3>Data Structures & Algorithms</h3>
+                    <div class="course-code">Course Code: CS301</div>
+                </div>
+            </div>
+            
+            <div class="card-stats-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-user-group"></i> Students</div>
+                    <div class="mini-stat-value">120</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-book"></i> Credits</div>
+                    <div class="mini-stat-value">4</div>
+                </div>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-row">
+                    <span class="meta-label">Department:</span>
+                    <span class="dept-pill pill-cse">CSE</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Duration:</span>
+                    <span class="meta-value"><i class="fa-regular fa-clock"></i> 14 weeks</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Professor:</span>
+                    <span class="meta-value">Dr. Priya Sharma</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-action btn-view">View Details</button>
+                <button class="btn-action btn-icon-only btn-edit" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button class="btn-action btn-icon-only btn-delete" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="course-card">
+            <div class="card-header">
+                <div class="course-icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <div class="course-info">
+                    <h3>Digital Electronics</h3>
+                    <div class="course-code">Course Code: EC201</div>
+                </div>
+            </div>
+            
+            <div class="card-stats-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-user-group"></i> Students</div>
+                    <div class="mini-stat-value">85</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-book"></i> Credits</div>
+                    <div class="mini-stat-value">3</div>
+                </div>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-row">
+                    <span class="meta-label">Department:</span>
+                    <span class="dept-pill pill-ece">ECE</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Duration:</span>
+                    <span class="meta-value"><i class="fa-regular fa-clock"></i> 14 weeks</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Professor:</span>
+                    <span class="meta-value">Prof. Rajesh Kumar</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-action btn-view">View Details</button>
+                <button class="btn-action btn-icon-only btn-edit" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button class="btn-action btn-icon-only btn-delete" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="course-card">
+            <div class="card-header">
+                <div class="course-icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <div class="course-info">
+                    <h3>Thermodynamics</h3>
+                    <div class="course-code">Course Code: ME401</div>
+                </div>
+            </div>
+            
+            <div class="card-stats-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-user-group"></i> Students</div>
+                    <div class="mini-stat-value">95</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-book"></i> Credits</div>
+                    <div class="mini-stat-value">4</div>
+                </div>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-row">
+                    <span class="meta-label">Department:</span>
+                    <span class="dept-pill pill-me">ME</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Duration:</span>
+                    <span class="meta-value"><i class="fa-regular fa-clock"></i> 14 weeks</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Professor:</span>
+                    <span class="meta-value">Dr. Anita Desai</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-action btn-view">View Details</button>
+                <button class="btn-action btn-icon-only btn-edit" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button class="btn-action btn-icon-only btn-delete" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="course-card">
+            <div class="card-header">
+                <div class="course-icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <div class="course-info">
+                    <h3>Machine Learning</h3>
+                    <div class="course-code">Course Code: CS401</div>
+                </div>
+            </div>
+            
+            <div class="card-stats-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-user-group"></i> Students</div>
+                    <div class="mini-stat-value">110</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-book"></i> Credits</div>
+                    <div class="mini-stat-value">4</div>
+                </div>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-row">
+                    <span class="meta-label">Department:</span>
+                    <span class="dept-pill pill-cse">CSE</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Duration:</span>
+                    <span class="meta-value"><i class="fa-regular fa-clock"></i> 14 weeks</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Professor:</span>
+                    <span class="meta-value">Dr. Priya Sharma</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-action btn-view">View Details</button>
+                <button class="btn-action btn-icon-only btn-edit" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button class="btn-action btn-icon-only btn-delete" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="course-card">
+            <div class="card-header">
+                <div class="course-icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <div class="course-info">
+                    <h3>Control Systems</h3>
+                    <div class="course-code">Course Code: EE301</div>
+                </div>
+            </div>
+            
+            <div class="card-stats-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-user-group"></i> Students</div>
+                    <div class="mini-stat-value">78</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-book"></i> Credits</div>
+                    <div class="mini-stat-value">3</div>
+                </div>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-row">
+                    <span class="meta-label">Department:</span>
+                    <span class="dept-pill pill-ee">EE</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Duration:</span>
+                    <span class="meta-value"><i class="fa-regular fa-clock"></i> 14 weeks</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Professor:</span>
+                    <span class="meta-value">Dr. Meera Patel</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-action btn-view">View Details</button>
+                <button class="btn-action btn-icon-only btn-edit" title="Edit"><i class="fa-regular fa-pen-to-square"></i></button>
+                <button class="btn-action btn-icon-only btn-delete" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="course-card">
+            <div class="card-header">
+                <div class="course-icon-box"><i class="fa-solid fa-book-open"></i></div>
+                <div class="course-info">
+                    <h3>Database Management Systems</h3>
+                    <div class="course-code">Course Code: CS201</div>
+                </div>
+            </div>
+            
+            <div class="card-stats-row">
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-user-group"></i> Students</div>
+                    <div class="mini-stat-value">130</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label"><i class="fa-solid fa-book"></i> Credits</div>
+                    <div class="mini-stat-value">4</div>
+                </div>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-row">
+                    <span class="meta-label">Department:</span>
+                    <span class="dept-pill pill-cse">CSE</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Duration:</span>
+                    <span class="meta-value"><i class="fa-regular fa-clock"></i> 14 weeks</span>
+                </div>
+                <div class="meta-row">
+                    <span class="meta-label">Professor:</span>
+                    <span class="meta-value">Mr. Vikram Singh</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-action btn-view">View Details</button>
+                <button class="btn-action btn-icon-only btn-edit" title="Edit"><i class="fa-regular fa-pen-to-squar5e"></i></button>
+                <button class="btn-action btn-icon-only btn-delete" title="Delete"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+    </div>
+</div>
+
+<!-- Mobile Sidebar -->
+<div id="mobileSidebar" class="fixed inset-0 z-40 -translate-x-full transition-transform duration-300 md:hidden">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
+    <!-- Sidebar Panel -->
+    <div class="absolute left-0 top-0 h-full w-64 bg-white shadow-lg flex flex-col">
+      
+    <!-- Sidebar Header -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+                    <div>
+                        <h1 class="font-bold text-gray-800">VIDYA-CUE</h1>
+                        <p class="text-xs text-gray-600">Admin portal</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg" title="Close Sidebar">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+            <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-user-graduate text-lg"></i>
+                <span>Students</span>
+            </a>
+            <a href="adminteacher.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                <span>Teachers</span>
+            </a>
+            <a href="admincourses.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+                <i class="fa-solid fa-book text-lg"></i>
+                <span>Courses</span>
+            </a>
+            <a href="adminanalytics.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-bar text-lg"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="adminsetting.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-gear text-lg"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('mobileSidebar');
+        sidebar.classList.toggle('-translate-x-full');
+    }
+    
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+    }
+</script>
+
+</body>
+</html>

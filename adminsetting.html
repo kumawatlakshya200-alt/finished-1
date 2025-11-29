@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Theme Gradients */
+            --blue-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+            --green-gradient: linear-gradient(135deg, #22c55e, #16a34a);
+            --purple-gradient: linear-gradient(135deg, #a855f7, #9333ea);
+            --orange-gradient: linear-gradient(135deg, #f97316, #ea580c);
+            
+            /* Component Colors */
+            --teal-icon-box: #00a99d;
+            --teal-text: #0f766e;
+            --toggle-on: #00a99d;
+            --toggle-off: #cbd5e1;
+            
+            --btn-save-bg: #00a99d;
+            --btn-link: #00a99d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 0;
+            min-height: 100vh;
+            padding-bottom: 5rem; /* Space for fixed save button */
+        }
+
+        /* --- Header --- */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: var(--text-grey);
+            font-weight: 400;
+        }
+
+        /* --- Quick Access Cards --- */
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .quick-card {
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .quick-card.blue { background: var(--blue-gradient); }
+        .quick-card.green { background: var(--green-gradient); }
+        .quick-card.purple { background: var(--purple-gradient); }
+        .quick-card.orange { background: var(--orange-gradient); }
+
+        .quick-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-label {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* --- Settings Grid --- */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .settings-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            min-height: 240px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .icon-general { background-color: #0ea5e9; }
+        .icon-notif { background-color: #00a99d; }
+        .icon-security { background-color: #0284c7; }
+        .icon-academic { background-color: #0284c7; }
+        .icon-roles { background-color: #a855f7; }
+        .icon-data { background-color: #f97316; }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Form Elements */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .label-text {
+            color: var(--text-grey);
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            outline: none;
+            width: 200px;
+            text-align: right;
+            background-color: #f9fafb;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--toggle-off);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--toggle-on);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Lists (Roles/Data) */
+        .list-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .link-action {
+            color: var(--btn-link);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .data-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            padding: 0.8rem 1rem;
+            background-color: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .data-title {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .data-desc {
+            font-size: 0.8rem;
+            color: var(--text-grey);
+        }
+
+        /* --- Floating Save Button --- */
+        .save-container {
+            position: fixed;
+            bottom: 30px;
+            right: 100px; /* Offset from chat button */
+            z-index: 100;
+        }
+
+        .btn-save {
+            background-color: var(--btn-save-bg);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 169, 157, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+        }
+
+        /* --- Floating Chat --- */
+        .chat-btn-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .chat-btn {
+            width: 60px;
+            height: 60px;
+            background-color: #0ea5e9;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background-color: #ff6b6b;
+            border: 2px solid #0ea5e9;
+            border-radius: 50%;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1024px) {
+            .settings-grid { grid-template-columns: 1fr; }
+            .quick-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .quick-grid { grid-template-columns: 1fr; }
+            .save-container { right: 30px; bottom: 100px; width: calc(100% - 60px); }
+            .btn-save { width: 100%; justify-content: center; }
+            .form-input, .form-select { width: 150px; }
+        }
+        .bg-primary { background-color: #0ea5e9; }
+        .text-primary { color: #0ea5e9; }
+        .bg-body { background-color: #f8f9fa; }
+        .active-nav-link { background-color: #e0f2fe; color: #0369a1; }
+        .nav-link:hover { background-color: #f3f4f6; }
+        .help-btn { width: 35px; height: 35px; background: #1f2937; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+        .glass-effect { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+<!-- Desktop Sidebar -->
+<div class="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-white shadow-lg flex-col">
+       <!-- Brand -->
+      <div class="p-6 flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+          E
+        </div>
+        <div>
+          <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+          <p class="text-xs text-gray-500">Admin Portal</p>
+        </div>
+      </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+        <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-line text-lg"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-user-graduate text-lg"></i>
+            <span>Students</span>
+        </a>
+        <a href="adminteacher.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chalkboard-user text-lg"></i>
+            <span>Teachers</span>
+        </a>
+        <a href="admincourses.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-book text-lg"></i>
+            <span>Courses</span>
+        </a>
+        <a href="adminanalytics.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+            <i class="fa-solid fa-chart-bar text-lg"></i>
+            <span>Analytics</span>
+        </a>
+        <a href="adminsetting.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+            <i class="fa-solid fa-gear text-lg"></i>
+            <span>Settings</span>
+        </a>
+    </nav>
+</div>
+
+<!-- Main Content Wrapper -->
+<div class="md:ml-64 flex flex-col h-screen">
+    <!-- Header -->
+    <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-0 md:px-0 z-20 flex-shrink-0 sticky top-0">
+        <!-- Mobile Menu Button -->
+        <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Spacer -->
+        <div class="hidden md:block"></div>
+
+        <!-- Right Actions -->
+        <div class="flex items-center gap-6 ml-auto">
+            <button class="text-gray-500 hover:text-primary transition-colors" onclick="toggleDarkMode()" title="Toggle theme">
+                <i class="fa-regular fa-moon text-xl"></i>
+            </button>
+            <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                <i class="fa-regular fa-bell text-xl"></i>
+                <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            </button>
+            <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                <div class="text-right hidden sm:block leading-tight">
+                    <p class="text-sm font-semibold text-gray-800">Admin User</p>
+                    <p class="text-xs text-gray-500">Administrator</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                    A
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Scrollable Content -->
+    <div id="dashboard-content" class="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-10">
+
+        <!-- Page Title -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">System Settings</h1>
+            <p class="text-gray-500 mt-1">Configure system preferences and policies</p>
+        </div>
+
+        <!-- Quick Access Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-blue-50 rounded-2xl p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                <div class="w-12 h-12 rounded-lg bg-blue-500 text-white flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-800">Backup Data</p>
+                </div>
+            </div>
+            <div class="bg-green-50 rounded-2xl p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                <div class="w-12 h-12 rounded-lg bg-green-500 text-white flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-800">Security Audit</p>
+                </div>
+            </div>
+            <div class="bg-purple-50 rounded-2xl p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                <div class="w-12 h-12 rounded-lg bg-purple-500 text-white flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-800">Maintenance</p>
+                </div>
+            </div>
+            <div class="bg-orange-50 rounded-2xl p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer">
+                <div class="w-12 h-12 rounded-lg bg-orange-500 text-white flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-file-export"></i>
+                </div>
+                <div>
+                    <p class="font-semibold text-gray-800">Export Reports</p>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Settings Cards Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- General Settings -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-sky-500 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-700">General Settings</h2>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Institution Name</span>
+                        <input type="text" class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" value="Engineering College Bikaner" placeholder="Institution Name" title="Institution Name">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Academic Year</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Academic Year">
+                            <option>2024-2025</option>
+                            <option>2023-2024</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Time Zone</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Time Zone">
+                            <option>IST (UTC+5:30)</option>
+                            <option>UTC</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Default Language</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Default Language">
+                            <option>English</option>
+                            <option>Hindi</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Settings -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-teal-500 text-white flex items-center justify-center">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-700">Notification Settings</h2>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Email Notifications</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" title="Email Notifications" checked>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                        </label>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">SMS Notifications</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" title="SMS Notifications" checked>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                        </label>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Push Notifications</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" title="Push Notifications">
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                        </label>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Weekly Reports</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" title="Weekly Reports" checked>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-500"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-blue-600 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-700">Security Settings</h2>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Two-Factor Authentication</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" title="Two-Factor Authentication" checked>
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Auto Logout</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Auto Logout">
+                            <option>30 minutes</option>
+                            <option>1 hour</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Password Expiry</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Password Expiry">
+                            <option>90 days</option>
+                            <option>60 days</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">IP Whitelist</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" class="sr-only peer" title="IP Whitelist">
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-sky-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic Settings -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-purple-600 text-white flex items-center justify-center">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-700">Academic Settings</h2>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Minimum Attendance</span>
+                        <input type="text" class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" value="75%" placeholder="Minimum Attendance" title="Minimum Attendance">
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Grading System</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Grading System">
+                            <option>10-Point Scale</option>
+                            <option>Percentage</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Exam Duration</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Exam Duration">
+                            <option>3 hours</option>
+                            <option>2 hours</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-700">Late Submission</span>
+                        <select class="w-48 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500" title="Late Submission">
+                            <option>Allowed</option>
+                            <option>Not Allowed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Roles & Permissions -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-600 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-700">User Roles & Permissions</h2>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-700 font-medium">Admin</span>
+                        <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">Full Access</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-700 font-medium">Teacher</span>
+                        <span class="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Limited</span>
+                    </div>
+                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <span class="text-gray-700 font-medium">Student</span>
+                        <span class="text-xs bg-green-100 text-green-700 px-3 py-1 rounded-full">View Only</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data & Backup -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-orange-500 text-white flex items-center justify-center">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-700">Data & Backup</h2>
+                </div>
+                <div class="space-y-4">
+                    <button class="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-medium transition-colors">
+                        <i class="fa-solid fa-download mr-2"></i> Backup Now
+                    </button>
+                    <button class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-xl font-medium transition-colors">
+                        <i class="fa-solid fa-history mr-2"></i> View Backups
+                    </button>
+                    <div class="pt-2 border-t border-gray-200 space-y-1">
+                        <p class="text-sm text-gray-600">Last Backup: 2 hours ago</p>
+                        <p class="text-sm text-gray-600">Storage Used: 2.5 GB / 10 GB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="mt-10 flex justify-end gap-4">
+            <button class="px-8 py-3 border border-gray-300 rounded-xl text-gray-700 font-medium hover:bg-gray-50 transition-colors" title="Cancel Changes">
+                Cancel
+            </button>
+            <button class="px-8 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-medium transition-colors" title="Save Changes">
+                <i class="fa-solid fa-save mr-2"></i> Save Changes
+            </button>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+<!-- Mobile Sidebar -->
+<div id="mobileSidebar" class="fixed inset-0 z-40 -translate-x-full transition-transform duration-300 md:hidden">
+    <!-- Overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50" onclick="toggleSidebar()"></div>
+    <!-- Sidebar Panel -->
+    <div class="absolute left-0 top-0 h-full w-64 bg-white shadow-lg flex flex-col">
+        <!-- Sidebar Header -->
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-bold">E</div>
+                    <div>
+                        <h1 class="font-bold text-gray-800">Admin Portal</h1>
+                        <p class="text-xs text-gray-500">Management</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-gray-100 rounded-lg" title="Close Sidebar">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+            <a href="admin.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="adminstudent.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-user-graduate text-lg"></i>
+                <span>Students</span>
+            </a>
+            <a href="adminteacher.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chalkboard-user text-lg"></i>
+                <span>Teachers</span>
+            </a>
+            <a href="admincourses.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-book text-lg"></i>
+                <span>Courses</span>
+            </a>
+            <a href="adminanalytics.html" class="nav-link rounded-xl transition-all px-4 py-3 flex items-center gap-3 text-gray-700">
+                <i class="fa-solid fa-chart-bar text-lg"></i>
+                <span>Analytics</span>
+            </a>
+            <a href="adminsetting.html" class="active-nav-link rounded-xl transition-all shadow-lg shadow-blue-200/50 px-4 py-3 flex items-center gap-3 font-medium">
+                <i class="fa-solid fa-gear text-lg"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('mobileSidebar');
+        sidebar.classList.toggle('-translate-x-full');
+    }
+    
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark');
+    }
+</script>
+<!-- Ensure sidebar and overlay are closed on page load -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar
+    var sidebar = document.getElementById('mobileSidebar');
+    if (sidebar) {
+        sidebar.classList.add('-translate-x-full');
+    }
+    // Overlay
+    var overlay = document.getElementById('sidebarOverlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+});
+</script>
+
+</body>
+</html>
