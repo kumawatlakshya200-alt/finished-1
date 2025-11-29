@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDYA-CUE Teacher Portal</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#a855f7', /* Purple brand color */
+                        'primary-dark': '#9333ea',
+                        secondary: '#00a99d', /* Teal accent */
+                        sidebar: '#ffffff',
+                        body: '#f9fafb',
+                        'card-purple': '#a855f7',
+                        'card-teal': '#00a99d',
+                        'card-blue': '#2563eb',
+                        'card-green': '#16a34a',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .active-nav-link {
+            background-color: #a855f7;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.4);
+        }
+        
+        .nav-link:hover:not(.active-nav-link) {
+            color: #a855f7;
+            background-color: #f3e8ff;
+        }
+
+        /* Attendance Styles */
+        :root {
+            --primary-purple: #a855f7;
+            --primary-dark: #9333ea;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-dark: #1f2937;
+            --text-grey: #6b7280;
+            
+            /* Status Colors */
+            --green-bg: #00c853;
+            --green-light: #dcfce7;
+            --green-text: #16a34a;
+            
+            --red-bg: #ff0000;
+            --red-light: #fee2e2;
+            --red-text: #dc2626;
+            
+            --purple-light: #f3e8ff;
+            --purple-text: #9333ea;
+
+            --teal-text: #0d9488;
+            --teal-bg: #ccfbf1;
+        }
+
+        .attendance-container {
+            max-width: 100%;
+        }
+
+        .attendance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .attendance-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .attendance-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .attendance-search {
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            width: 250px;
+        }
+
+        .attendance-filter-btn {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .attendance-filter-btn:hover {
+            opacity: 0.9;
+        }
+
+        .attendance-table-container {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .attendance-table thead {
+            background-color: var(--purple-light);
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .attendance-table th {
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .attendance-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s;
+        }
+
+        .attendance-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .attendance-table td {
+            padding: 1rem 1.2rem;
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-present {
+            background-color: var(--green-light);
+            color: var(--green-text);
+        }
+
+        .status-absent {
+            background-color: var(--red-light);
+            color: var(--red-text);
+        }
+
+        .status-leave {
+            background-color: var(--purple-light);
+            color: var(--purple-text);
+        }
+
+        .attendance-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .attendance-action-btn {
+            padding: 0.5rem 0.8rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .attendance-action-btn:hover {
+            background-color: var(--purple-light);
+            border-color: var(--primary-purple);
+            color: var(--primary-purple);
+        }
+
+        .attendance-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .attendance-stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .attendance-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .attendance-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-grey);
+        }
+
+        @media (max-width: 768px) {
+            .attendance-controls {
+                flex-direction: column;
+            }
+
+            .attendance-search {
+                width: 100%;
+            }
+
+            .attendance-table-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg hidden md:flex flex-col h-full z-10 border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    E
+                </div>
+                <div>
+                    <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                    <p class="text-xs text-gray-500">Teacher Portal</p>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2 custom-scrollbar">
+                
+                <a href="teacherprofile.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">My Profile</span>
+                </a>
+
+                <a href="teacherschedule.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-calendar-check w-5"></i>
+                    <span class="font-medium">Today's Schedule</span>
+                </a>
+
+                <a href="#" onclick="setActive(this)" class="flex items-center gap-4 px-4 py-3 active-nav-link rounded-xl transition-all nav-link">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a href="teacherassignment.html" onclick="setActive(this)" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-file-lines w-5"></i>
+                    <span>Assignments</span>
+                </a>
+
+                <a href="teacherstudentlist.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>Student List</span>
+                </a>
+
+                <a href="teacheranalysis.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Performance Analytics</span>
+                </a>
+
+                <a href="teacherupload.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-upload w-5"></i>
+                    <span>Upload Material</span>
+                </a>
+
+                <a href="teachernotification.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-bell w-5"></i>
+                    <span>Notifications</span>
+                </a>
+
+            </nav>
+
+            <!-- Logout -->
+            <div class="p-6 border-t border-gray-100">
+                <a href="#" class="flex items-center gap-4 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+            
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-20">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Page Title (Desktop) -->
+                <div class="hidden md:block">
+                     <!-- Breadcrumb placeholder if needed, mostly empty in design -->
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Dr. Priya Sharma</p>
+                            <p class="text-xs text-gray-500">Faculty</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            D
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto pb-20 custom-scrollbar">
+                
+                <!-- Attendance Content -->
+                <div class="p-4 md:p-10">
+
+                    <div class="attendance-container">
+                        
+                        <!-- Header Section -->
+                        <div class="attendance-header">
+                            <h1 class="attendance-title">Attendance Management</h1>
+                        </div>
+
+                        <!-- Stats Section -->
+                        <div class="attendance-stats">
+                            <div class="attendance-stat-card">
+                                <div class="attendance-stat-number" style="color: var(--green-text);">315</div>
+                                <div class="attendance-stat-label">Total Present</div>
+                            </div>
+                            <div class="attendance-stat-card">
+                                <div class="attendance-stat-number" style="color: var(--red-text);">25</div>
+                                <div class="attendance-stat-label">Total Absent</div>
+                            </div>
+                            <div class="attendance-stat-card">
+                                <div class="attendance-stat-number" style="color: var(--primary-purple);">10</div>
+                                <div class="attendance-stat-label">On Leave</div>
+                            </div>
+                            <div class="attendance-stat-card">
+                                <div class="attendance-stat-number" style="color: var(--teal-text);">92%</div>
+                                <div class="attendance-stat-label">Attendance Rate</div>
+                            </div>
+                        </div>
+
+                        <!-- Controls Section -->
+                        <div class="attendance-controls" style="margin-bottom: 2rem;">
+                            <input type="text" class="attendance-search" placeholder="Search by name or roll number...">
+                            <button class="attendance-filter-btn">
+                                <i class="fa-solid fa-filter"></i> Filter
+                            </button>
+                        </div>
+
+                        <!-- Table Section -->
+                        <div class="attendance-table-container">
+                            <table class="attendance-table">
+                                <thead>
+                                    <tr>
+                                        <th>Roll No.</th>
+                                        <th>Student Name</th>
+                                        <th>Course</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>001</td>
+                                        <td>Aarav Patel</td>
+                                        <td>Data Structures</td>
+                                        <td>Nov 25, 2024</td>
+                                        <td><span class="status-badge status-present">Present</span></td>
+                                        <td>
+                                            <div class="attendance-actions">
+                                                <button class="attendance-action-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="attendance-action-btn" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>002</td>
+                                        <td>Bhavya Singh</td>
+                                        <td>Data Structures</td>
+                                        <td>Nov 25, 2024</td>
+                                        <td><span class="status-badge status-absent">Absent</span></td>
+                                        <td>
+                                            <div class="attendance-actions">
+                                                <button class="attendance-action-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="attendance-action-btn" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>003</td>
+                                        <td>Chitra Reddy</td>
+                                        <td>Data Structures</td>
+                                        <td>Nov 25, 2024</td>
+                                        <td><span class="status-badge status-leave">Leave</span></td>
+                                        <td>
+                                            <div class="attendance-actions">
+                                                <button class="attendance-action-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="attendance-action-btn" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>004</td>
+                                        <td>Devraj Kumar</td>
+                                        <td>Algorithms</td>
+                                        <td>Nov 25, 2024</td>
+                                        <td><span class="status-badge status-present">Present</span></td>
+                                        <td>
+                                            <div class="attendance-actions">
+                                                <button class="attendance-action-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="attendance-action-btn" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>005</td>
+                                        <td>Esha Gupta</td>
+                                        <td>Algorithms</td>
+                                        <td>Nov 25, 2024</td>
+                                        <td><span class="status-badge status-present">Present</span></td>
+                                        <td>
+                                            <div class="attendance-actions">
+                                                <button class="attendance-action-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="attendance-action-btn" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>006</td>
+                                        <td>Faisal Ahmed</td>
+                                        <td>Algorithms</td>
+                                        <td>Nov 25, 2024</td>
+                                        <td><span class="status-badge status-absent">Absent</span></td>
+                                        <td>
+                                            <div class="attendance-actions">
+                                                <button class="attendance-action-btn" title="Edit">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                                <button class="attendance-action-btn" title="Delete">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Help FAB -->
+            <button class="absolute bottom-4 right-4 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-xs z-30 shadow-lg hover:bg-gray-800 transition-colors">
+                ?
+            </button>
+
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden glass-effect"></div>
+
+        <!-- Mobile Sidebar -->
+        <aside id="mobileSidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 md:hidden flex flex-col h-full border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">E</div>
+                    <div>
+                        <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                        <p class="text-xs text-gray-500">Teacher Portal</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-500" title="Close sidebar"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+                <a href="teacherprofile.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">My Profile</span>
+                </a>
+                <a href="teacherschedule.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-calendar-check w-5"></i>
+                    <span class="font-medium">Today's Schedule</span>
+                </a>
+                <a href="#" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 bg-primary text-white shadow-md rounded-xl transition-all">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="teacherassignment.html" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-file-lines w-5"></i>
+                    <span>Assignments</span>
+                </a>
+                <a href="teacherstudentlist.html" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>Student List</span>
+                </a>
+                <a href="teacheranalysis.html" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Performance Analytics</span>
+                </a>
+                <a href="teacherupload.html" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-upload w-5"></i>
+                    <span>Upload Material</span>
+                </a>
+                <a href="teachernotification.html" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-bell w-5"></i>
+                    <span>Notifications</span>
+                </a>
+                 <a href="#" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5 text-red-500"></i>
+                    <span class="text-red-500">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Set active nav link
+        function setActive(element) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav-link');
+                link.classList.add('text-gray-600');
+            });
+            element.classList.add('active-nav-link');
+            element.classList.remove('text-gray-600');
+        }
+    </script>
+</body>
+</html>

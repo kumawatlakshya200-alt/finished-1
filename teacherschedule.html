@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDYA-CUE Teacher Portal</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#a855f7', /* Purple brand color */
+                        'primary-dark': '#9333ea',
+                        secondary: '#00a99d', /* Teal accent */
+                        sidebar: '#ffffff',
+                        body: '#f9fafb',
+                        'card-purple': '#a855f7',
+                        'card-teal': '#00a99d',
+                        'card-blue': '#2563eb',
+                        'card-green': '#16a34a',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .active-nav-link {
+            background-color: #a855f7;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.4);
+        }
+        
+        .nav-link:hover:not(.active-nav-link) {
+            color: #a855f7;
+            background-color: #f3e8ff;
+        }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg hidden md:flex flex-col h-full z-10 border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    E
+                </div>
+                <div>
+                    <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                    <p class="text-xs text-gray-500">Teacher Portal</p>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2 custom-scrollbar">
+                
+                <a href="teacherprofile.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">My Profile</span>
+                </a>
+
+                <a href="#" onclick="setActive(this)" class="flex items-center gap-4 px-4 py-3 active-nav-link rounded-xl transition-all nav-link">
+                    <i class="fa-regular fa-calendar-check w-5"></i>
+                    <span class="font-medium">Today's Schedule</span>
+                </a>
+
+                <a href="teacherattendance.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a href="teacherassignment.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-file-lines w-5"></i>
+                    <span>Assignments</span>
+                </a>
+
+                <a href="teacherstudentlist.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>Student List</span>
+                </a>
+
+                <a href="teacheranalysis.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Performance Analytics</span>
+                </a>
+
+                <a href="teacherupload.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-upload w-5"></i>
+                    <span>Upload Material</span>
+                </a>
+
+                <a href="teachernotification.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-bell w-5"></i>
+                    <span>Notifications</span>
+                </a>
+
+            </nav>
+
+            <!-- Logout -->
+            <div class="p-6 border-t border-gray-100">
+                <a href="#" class="flex items-center gap-4 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+            
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-20">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Page Title (Desktop) -->
+                <div class="hidden md:block">
+                     <!-- Breadcrumb placeholder if needed, mostly empty in design -->
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Dr. Priya Sharma</p>
+                            <p class="text-xs text-gray-500">Faculty</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            D
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-10 pb-20 custom-scrollbar">
+                
+                <!-- Page Title Area -->
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-800">Today's Schedule</h1>
+                    <p class="text-gray-500 mt-1">Monday, November 25, 2024</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    
+                    <!-- Card 1 -->
+                    <div class="bg-card-purple text-white rounded-2xl p-6 shadow-lg shadow-purple-200">
+                        <div class="flex flex-col h-full justify-between">
+                            <h3 class="text-4xl font-bold mb-1">5</h3>
+                            <p class="text-purple-100 text-sm font-medium">Classes Today</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-card-teal text-white rounded-2xl p-6 shadow-lg shadow-teal-200">
+                        <div class="flex flex-col h-full justify-between">
+                            <h3 class="text-4xl font-bold mb-1">305</h3>
+                            <p class="text-teal-100 text-sm font-medium">Total Students</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-card-blue text-white rounded-2xl p-6 shadow-lg shadow-blue-200">
+                        <div class="flex flex-col h-full justify-between">
+                            <h3 class="text-4xl font-bold mb-1">2</h3>
+                            <p class="text-blue-100 text-sm font-medium">Lab Hours</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-card-green text-white rounded-2xl p-6 shadow-lg shadow-green-200">
+                        <div class="flex flex-col h-full justify-between">
+                            <h3 class="text-2xl font-bold mb-1">2-4 PM</h3>
+                            <p class="text-green-100 text-sm font-medium">Office Hours</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Main Section Container -->
+                <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100">
+                    
+                    <!-- Break Time Indicator (Visual Divider) -->
+                    <div class="flex flex-col items-center justify-center py-6 text-gray-400 border-b border-gray-50 mb-8">
+                        <i class="fa-regular fa-clock text-xl mb-2"></i>
+                        <p class="text-sm">Break Time</p>
+                        <p class="text-xs">12:00 - 12:30</p>
+                    </div>
+
+                    <h2 class="text-lg font-semibold text-gray-700 mb-6">Class Schedule</h2>
+
+                    <!-- Schedule List -->
+                    <div class="space-y-4 mb-10">
+
+                        <!-- Item 1: Active/Live Class -->
+                        <div class="border-2 border-primary/30 bg-purple-50/30 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:shadow-md">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="font-bold text-gray-800 text-lg">Algorithms</h3>
+                                    <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">Live Now</span>
+                                </div>
+                                <p class="text-gray-500 text-sm mb-3">B.Tech CSE - 5th Sem</p>
+                                <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-gray-600">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-regular fa-clock text-primary"></i>
+                                        <span>12:30 - 01:30</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-location-dot text-primary"></i>
+                                        <span>Room 305</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-user-group text-primary"></i>
+                                        <span>68 Students</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-medium px-6 py-3 rounded-xl transition-colors shadow-lg shadow-purple-200">
+                                    Mark Attendance
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item 2: Upcoming Class -->
+                        <div class="border border-blue-100 bg-blue-50/20 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-800 text-lg mb-2">Artificial Intelligence</h3>
+                                <p class="text-gray-500 text-sm mb-3">B.Tech CSE - 7th Sem</p>
+                                <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-gray-600">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-regular fa-clock text-blue-500"></i>
+                                        <span>02:00 - 03:00</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-location-dot text-blue-500"></i>
+                                        <span>Room 307</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-user-group text-blue-500"></i>
+                                        <span>52 Students</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="w-full md:w-auto bg-blue-100 text-blue-600 hover:bg-blue-200 font-medium px-6 py-2 rounded-xl transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Item 3: Upcoming Class -->
+                        <div class="border border-blue-100 bg-blue-50/20 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-blue-200">
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-800 text-lg mb-2">Machine Learning</h3>
+                                <p class="text-gray-500 text-sm mb-3">M.Tech CSE - 1st Sem</p>
+                                <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-gray-600">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-regular fa-clock text-blue-500"></i>
+                                        <span>03:00 - 04:00</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-location-dot text-blue-500"></i>
+                                        <span>Room 308</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-user-group text-blue-500"></i>
+                                        <span>35 Students</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="w-full md:w-auto bg-blue-100 text-blue-600 hover:bg-blue-200 font-medium px-6 py-2 rounded-xl transition-colors">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Completed Class (Visual example based on first screenshot style) -->
+                        <div class="border border-green-100 bg-green-50/20 rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all hover:border-green-200 opacity-80">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <h3 class="font-bold text-gray-800 text-lg">Data Structures</h3>
+                                    <i class="fa-solid fa-circle-check text-green-500"></i>
+                                </div>
+                                <p class="text-gray-500 text-sm mb-3">B.Tech CSE - 3rd Sem</p>
+                                <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm text-gray-600">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-regular fa-clock text-green-600"></i>
+                                        <span>09:00 - 10:00</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-location-dot text-green-600"></i>
+                                        <span>Room 301</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-user-group text-green-600"></i>
+                                        <span>75 Students</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="w-full md:w-auto bg-green-100 text-green-700 hover:bg-green-200 font-medium px-6 py-2 rounded-xl transition-colors">
+                                    View Report
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Upcoming Meetings Section -->
+                    <h2 class="text-lg font-semibold text-gray-700 mb-6">Upcoming Meetings & Events</h2>
+                    <div class="space-y-4">
+                        
+                        <!-- Meeting 1 -->
+                        <div class="border border-purple-100 bg-white rounded-2xl p-5 hover:shadow-sm transition-shadow">
+                            <h3 class="font-medium text-gray-800">Department Meeting</h3>
+                            <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                <span>04:30 PM</span>
+                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span>Conference Room</span>
+                            </div>
+                        </div>
+
+                        <!-- Meeting 2 -->
+                        <div class="border border-purple-100 bg-white rounded-2xl p-5 hover:shadow-sm transition-shadow">
+                            <h3 class="font-medium text-gray-800">Parent-Teacher Meeting</h3>
+                            <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                <span>Tomorrow, 10:00 AM</span>
+                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span>Auditorium</span>
+                            </div>
+                        </div>
+
+                        <!-- Meeting 3 -->
+                        <div class="border border-purple-100 bg-white rounded-2xl p-5 hover:shadow-sm transition-shadow">
+                            <h3 class="font-medium text-gray-800">Faculty Development Program</h3>
+                            <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                                <span>Dec 1, 2024</span>
+                                <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                <span>Seminar Hall</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Help FAB -->
+            <button class="absolute bottom-4 right-4 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-xs z-30 shadow-lg hover:bg-gray-800 transition-colors">
+                ?
+            </button>
+
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden glass-effect"></div>
+
+        <!-- Mobile Sidebar -->
+        <aside id="mobileSidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 md:hidden flex flex-col h-full border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">E</div>
+                    <div>
+                        <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                        <p class="text-xs text-gray-500">Teacher Portal</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-500" title="Close sidebar"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+                <a href="teacherprofile.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">My Profile</span>
+                </a>
+                <a href="#" onclick="setActive(this); toggleSidebar();" class="flex items-center gap-4 px-4 py-3 bg-primary text-white shadow-md rounded-xl transition-all">
+                    <i class="fa-regular fa-calendar-check w-5"></i>
+                    <span class="font-medium">Today's Schedule</span>
+                </a>
+                <a href="teacherattendance.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="teacherassignment.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-file-lines w-5"></i>
+                    <span>Assignments</span>
+                </a>
+                <a href="teacherstudentlist.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>Student List</span>
+                </a>
+                <a href="teacheranalysis.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Performance Analytics</span>
+                </a>
+                <a href="teacherupload.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-upload w-5"></i>
+                    <span>Upload Material</span>
+                </a>
+                <a href="teachernotification.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-bell w-5"></i>
+                    <span>Notifications</span>
+                </a>
+                 <a href="#" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5 text-red-500"></i>
+                    <span class="text-red-500">Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>

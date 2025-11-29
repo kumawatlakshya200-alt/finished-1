@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIDYA-CUE Teacher Portal</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config for Custom Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#a855f7', /* Purple brand color */
+                        'primary-dark': '#9333ea',
+                        secondary: '#00a99d', /* Teal accent */
+                        sidebar: '#ffffff',
+                        body: '#f9fafb',
+                        'card-purple': '#a855f7',
+                        'card-teal': '#00a99d',
+                        'card-blue': '#2563eb',
+                        'card-green': '#16a34a',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+        
+        .active-nav-link {
+            background-color: #a855f7;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.4);
+        }
+        
+        .nav-link:hover:not(.active-nav-link) {
+            color: #a855f7;
+            background-color: #f3e8ff;
+        }
+
+        /* Profile Page Custom Styles */
+        .profile-header {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .profile-edit-btn {
+            background-color: #a855f7;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .profile-edit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .profile-top-section {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .profile-role {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .profile-dept {
+            color: #6b7280;
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+
+        .profile-divider {
+            width: 100%;
+            height: 1px;
+            background-color: #eee;
+            margin: 2rem 0;
+        }
+
+        .profile-stats-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        .profile-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-stat-number {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #a855f7;
+        }
+
+        .profile-stat-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .profile-info-header {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .profile-info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .profile-icon-box {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .profile-icon-purple { background-color: #ede9fe; color: #a855f7; }
+        .profile-icon-green { background-color: #dcfce7; color: #22c55e; }
+        .profile-icon-blue { background-color: #dbeafe; color: #3b82f6; }
+        .profile-icon-orange { background-color: #ffedd5; color: #f97316; }
+        .profile-icon-pink { background-color: #fce7f3; color: #ec4899; }
+
+        .profile-info-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-label {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.2rem;
+        }
+
+        .profile-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #1f2937;
+            line-height: 1.4;
+        }
+
+        .profile-bottom-section {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .profile-courses-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-courses-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .profile-course-card {
+            background-color: #f3e8ff;
+            padding: 1.5rem;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: transform 0.2s;
+        }
+
+        .profile-course-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .profile-course-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #2d2d2d;
+        }
+
+        .profile-course-meta {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        @media (max-width: 1024px) {
+            .profile-top-section {
+                grid-template-columns: 1fr;
+            }
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-courses-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-courses-grid { grid-template-columns: 1fr; }
+            .profile-stats-container { gap: 1rem; }
+        }
+
+        /* Dark Mode Styles */
+        html.dark {
+            color-scheme: dark;
+        }
+
+        html.dark body {
+            background-color: #1a1a1a;
+            color: #e5e7eb;
+        }
+
+        html.dark .bg-white {
+            background-color: #2d2d2d;
+        }
+
+        html.dark .bg-gray-50 {
+            background-color: #1f1f1f;
+        }
+
+        html.dark .bg-sidebar {
+            background-color: #2d2d2d;
+        }
+
+        html.dark .glass-effect {
+            background: rgba(45, 45, 45, 0.95);
+        }
+
+        html.dark .text-gray-600 {
+            color: #9ca3af;
+        }
+
+        html.dark .text-gray-800 {
+            color: #e5e7eb;
+        }
+
+        html.dark .text-gray-900 {
+            color: #f3f4f6;
+        }
+
+        html.dark .text-gray-500 {
+            color: #9ca3af;
+        }
+
+        html.dark .border-gray-200 {
+            border-color: #404040;
+        }
+
+        html.dark .shadow-sm,
+        html.dark .shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        html.dark .profile-card {
+            background-color: #2d2d2d;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        html.dark ::-webkit-scrollbar-track {
+            background: #2d2d2d;
+        }
+
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+        }
+
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #5a5a5a;
+        }
+    </style>
+</head>
+<body class="bg-body text-gray-700 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg hidden md:flex flex-col h-full z-10 border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    T
+                </div>
+                <div>
+                    <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                    <p class="text-xs text-gray-500">Teacher Portal</p>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2 custom-scrollbar">
+                
+                <a href="teacherprofile.html"
+                 class="flex items-center gap-4 px-4 py-3 active-nav-link rounded-xl transition-all shadow-lg shadow-purple-200/50">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">Profile</span>
+                </a>
+
+                <a href="teacherschedule.html" 
+                class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-calendar-check w-5"></i>
+                    <span class="font-medium">Schedule</span>
+                </a>
+
+                <a href="teacherattendance.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Attendance</span>
+                </a>
+
+                <a href="teacherassignment.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-file-lines w-5"></i>
+                    <span>Assignments</span>
+                </a>
+
+                <a href="teacherstudentlist.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>Student List</span>
+                </a>
+
+                <a href="teacheranalysis.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Analytics</span>
+                </a>
+
+                <a href="teacherupload.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-solid fa-upload w-5"></i>
+                    <span>Upload Material</span>
+                </a>
+
+                <a href="teachernotification.html"
+                 class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all nav-link group">
+                    <i class="fa-regular fa-bell w-5"></i>
+                    <span>Notifications</span>
+                </a>
+
+            </nav>
+
+            <!-- Logout -->
+            <div class="p-6 border-t border-gray-100">
+                <a href="../Login Page/index.html" class="flex items-center gap-4 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span class="font-medium">Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+            
+            <!-- Header -->
+            <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-6 md:px-10 z-20">
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-gray-600 text-xl mr-4" onclick="toggleSidebar()" title="Toggle sidebar menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <!-- Page Title (Desktop) -->
+                <div class="hidden md:block"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-6 ml-auto">
+                    <button class="text-gray-500 hover:text-primary transition-colors" onclick="toggleDarkMode()" title="Toggle theme">
+                        <i class="fa-regular fa-moon text-xl" id="themeIcon"></i>
+                    </button>
+                    <button class="text-gray-500 hover:text-primary transition-colors relative" title="Notifications">
+                        <i class="fa-regular fa-bell text-xl"></i>
+                        <span class="absolute top-0 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                    </button>
+                    
+                    <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                        <div class="text-right hidden sm:block leading-tight">
+                            <p class="text-sm font-semibold text-gray-800">Dr. Priya Sharma</p>
+                            <p class="text-xs text-gray-500">Faculty</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center font-bold text-lg shadow-sm cursor-pointer">
+                            D
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto pb-20 custom-scrollbar">
+                
+                <!-- Profile Content -->
+                <div class="p-4 md:p-10">
+
+                    <div class="flex justify-between items-center mb-8">
+                        <div class="profile-header">My Profile</div>
+                        <button class="profile-edit-btn" onclick="handleEdit()">
+                            <i class="fa-regular fa-pen-to-square"></i> Edit Profile
+                        </button>
+                    </div>
+
+                    <div class="profile-top-section">
+                        
+                        <div class="profile-card">
+                            <div class="profile-avatar">PS</div>
+                            <div class="profile-name">Dr. Priya Sharma</div>
+                            <div class="profile-role">Assistant Professor</div>
+                            <div class="profile-dept">Computer Science & Engineering</div>
+
+                            <div class="profile-divider"></div>
+
+                            <div class="profile-stats-container">
+                                <div class="profile-stat-item">
+                                    <span class="profile-stat-number">6</span>
+                                    <span class="profile-stat-label">Courses</span>
+                                </div>
+                                <div class="profile-stat-item">
+                                    <span class="profile-stat-number">450</span>
+                                    <span class="profile-stat-label">Students</span>
+                                </div>
+                                <div class="profile-stat-item">
+                                    <span class="profile-stat-number">12</span>
+                                    <span class="profile-stat-label">Years</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="profile-card">
+                            <div class="profile-info-header">Professional Information</div>
+                            
+                            <div class="profile-info-grid">
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-purple"><i class="fa-regular fa-envelope"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Email Address</span>
+                                        <span class="profile-value">priya.sharma@ecb.ac.in</span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-green"><i class="fa-solid fa-phone"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Phone Number</span>
+                                        <span class="profile-value">+91 9876543220</span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-blue"><i class="fa-solid fa-ribbon"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Qualification</span>
+                                        <span class="profile-value">PhD in Computer Science</span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-green"><i class="fa-solid fa-book-open"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Specialization</span>
+                                        <span class="profile-value">Artificial Intelligence & Machine Learning</span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-orange"><i class="fa-regular fa-calendar"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Experience</span>
+                                        <span class="profile-value">12 years</span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-pink"><i class="fa-regular fa-calendar-check"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Joining Date</span>
+                                        <span class="profile-value">August 2012</span>
+                                    </div>
+                                </div>
+                                <div class="profile-info-item">
+                                    <div class="profile-icon-box profile-icon-purple"><i class="fa-solid fa-location-dot"></i></div>
+                                    <div class="profile-info-details">
+                                        <span class="profile-label">Cabin Location</span>
+                                        <span class="profile-value">Room 205, CSE Block</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-bottom-section">
+                        <div class="profile-courses-title">Courses Teaching (Current Semester)</div>
+                        <div class="profile-courses-grid" id="coursesGrid">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Help FAB -->
+            <button class="absolute bottom-4 right-4 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-xs z-30 shadow-lg hover:bg-gray-800 transition-colors">
+                ?
+            </button>
+
+        </main>
+
+        <!-- Overlay for mobile sidebar -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden glass-effect"></div>
+
+        <!-- Mobile Sidebar -->
+        <aside id="mobileSidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 md:hidden flex flex-col h-full border-r border-gray-100">
+            <!-- Brand -->
+            <div class="p-6 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">E</div>
+                    <div>
+                        <h1 class="text-primary font-bold text-lg leading-tight">VIDYA-CUE</h1>
+                        <p class="text-xs text-gray-500">Teacher Portal</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="text-gray-500" title="Close sidebar"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- Menu -->
+            <nav class="flex-1 overflow-y-auto py-4 px-4 space-y-2">
+                <a href="teacherprofile.html" class="flex items-center gap-4 px-4 py-3 bg-primary text-white shadow-md rounded-xl transition-all">
+                    <i class="fa-regular fa-user w-5"></i>
+                    <span class="font-medium">Profile</span>
+                </a>
+                <a href="teacherschedule.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-calendar-check w-5"></i>
+                    <span class="font-medium">Schedule</span>
+                </a>
+                <a href="teacherattendance.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-check-double w-5"></i>
+                    <span>Attendance</span>
+                </a>
+                <a href="teacherassignment.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-file-lines w-5"></i>
+                    <span>Assignments</span>
+                </a>
+                <a href="teacherstudentlist.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>Student List</span>
+                </a>
+                <a href="teacheranalysis.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-chart-simple w-5"></i>
+                    <span>Analytics</span>
+                </a>
+                <a href="teacherupload.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-solid fa-upload w-5"></i>
+                    <span>Upload Material</span>
+                </a>
+                <a href="teachernotification.html" class="flex items-center gap-4 px-4 py-3 text-gray-600 rounded-xl transition-all">
+                    <i class="fa-regular fa-bell w-5"></i>
+                    <span>Notifications</span>
+                </a>
+                <a href="../Login Page/index.html" class="flex items-center gap-4 px-4 py-3 text-red-500 rounded-xl transition-all">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                    <span>Logout</span>
+                </a>
+            </nav>
+        </aside>
+
+    </div>
+
+    <script>
+        // Course data
+        const courses = [
+            { name: "Data Structures", meta: "B.Tech CSE - 3rd Sem", students: "75 Students" },
+            { name: "Algorithms", meta: "B.Tech CSE - 5th Sem", students: "68 Students" },
+            { name: "Artificial Intelligence", meta: "B.Tech CSE - 7th Sem", students: "52 Students" },
+            { name: "Machine Learning", meta: "M.Tech CSE - 1st Sem", students: "35 Students" },
+            { name: "Data Structures Lab", meta: "B.Tech CSE - 3rd Sem", students: "75 Students" },
+            { name: "AI Lab", meta: "B.Tech CSE - 7th Sem", students: "52 Students" }
+        ];
+
+        // Render courses
+        function renderCourses() {
+            const grid = document.getElementById('coursesGrid');
+            let html = '';
+            
+            courses.forEach(course => {
+                html += `
+                    <div class="profile-course-card">
+                        <div class="profile-course-name">${course.name}</div>
+                        <div class="profile-course-meta">${course.meta}</div>
+                        <div class="profile-course-meta">${course.students}</div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        // Set active nav link
+        function setActive(element) {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav-link');
+                link.classList.add('text-gray-600');
+            });
+            element.classList.add('active-nav-link');
+            element.classList.remove('text-gray-600');
+        }
+
+        // Simple interactions
+        function handleEdit() {
+            alert("Edit Profile Clicked! This would open a form in a real app.");
+        }
+
+        // Night Mode Toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        }
+        
+        // Load saved theme on page load
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeIcon = document.getElementById('themeIcon');
+            const html = document.documentElement;
+            
+            if (savedTheme === 'dark') {
+                html.classList.add('dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                html.classList.remove('dark');
+                themeIcon.classList.add('fa-moon');
+                themeIcon.classList.remove('fa-sun');
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            renderCourses();
+        });
+    </script>
+</body>
+</html>
